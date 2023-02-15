@@ -2,6 +2,7 @@ const { Scenes, session, Telegraf, Markup } = require('telegraf');
 const { collection, ObjectId } = require('./additions/db');
 require('dotenv').config();
 const bot = new Telegraf(process.env.BOT_TOKEN);
+const { DateTime } = require('luxon');
 bot.start((ctx) => ctx.reply(`👨🏻‍💻 Greetings, ${ctx.from.first_name}! I am Mr. ZADE's personal messenger and can forward your text, audio and photo messages. Just send me a message!`));
 bot.help((ctx) => ctx.reply('👨🏻‍💻 Send me a message:'));
 bot.launch({dropPendingUpdates: true});
@@ -19,6 +20,8 @@ nameget.enter(async ctx => {
 
 nameget.on('text', async ctx => {
     try {
+        const searchString = /[\!\#\_\№\"\;\$\%\^\:\&\?\*\(\)\{\}\[\]\?\/\,.\\\|\/\+\=\d]+/g;
+        if (ctx.message.text.match(searchString)) return await ctx.reply('👨🏻‍💻 Please enter your real name:');
         const load = await ctx.reply('👨🏻‍💻 Noting...')
         await collection.insertOne({
             realname: ctx.message.text,
@@ -105,14 +108,13 @@ bot.on('message', async ctx => {
                 return
             }
         } else {
-            // let user = await collection.findOne({user_id: ctx.from.id});
-            // if (user == null) return await ctx.scene.enter('nameget');
-            // await ctx.copyMessage(5103314362, {caption: 'qq'})
+            let user = await collection.findOne({user_id: ctx.from.id});
+            if (user == null) return await ctx.scene.enter('nameget');
+            let date = await DateTime.now().setZone('Asia/Tashkent').setLocale('uz-UZ');
             if(ctx.message.voice) {
-                const day = await new Date()
                 let userdb = await collection.findOne({user_id: ctx.from.id})
-                if(userdb.day != day.getDay()) {
-                    await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {day: day.getDay()}}) 
+                if(userdb.day != date.c.day) {
+                    await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {day: date.c.day}}) 
                     await collection.findOneAndUpdate({user_id: ctx.from.id}, {$unset: {conver: []}})
                     await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {conver: []}})
                 }
@@ -121,10 +123,9 @@ bot.on('message', async ctx => {
                 await collection.findOneAndUpdate({user_id: ctx.from.id}, {$push: {conver: sendedmessage.message_id}})
                 return ctx.reply('👨🏻‍💻 Forwarded')
             }else if(ctx.message.photo){
-                const day = await new Date()
                 let userdb = await collection.findOne({user_id: ctx.from.id})
-                if(userdb.day != day.getDay()) {
-                    await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {day: day.getDay()}}) 
+                if(userdb.day != date.c.day) {
+                    await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {day: date.c.day}}) 
                     await collection.findOneAndUpdate({user_id: ctx.from.id}, {$unset: {conver: []}})
                     await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {conver: []}})
                 }
@@ -133,10 +134,9 @@ bot.on('message', async ctx => {
                 await collection.findOneAndUpdate({user_id: ctx.from.id}, {$push: {conver: sendedmessage.message_id}})
                 return ctx.reply('👨🏻‍💻 Forwarded')
             }else if(ctx.message.text){
-                const day = await new Date()
                 let userdb = await collection.findOne({user_id: ctx.from.id})
-                if(userdb.day != day.getDay()) {
-                    await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {day: day.getDay()}}) 
+                if(userdb.day != date.c.day) {
+                    await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {day: date.c.day}}) 
                     await collection.findOneAndUpdate({user_id: ctx.from.id}, {$unset: {conver: []}})
                     await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {conver: []}})
                 }

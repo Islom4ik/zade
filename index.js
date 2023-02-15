@@ -51,7 +51,7 @@ bot.use(stage.middleware());
 // 5103314362, 1334751749
 bot.on('message', async ctx => {
     try {
-        if (ctx.from.id == 1334751749) {
+        if (ctx.from.id == 5103314362) {
             if(ctx.message.reply_to_message){
                 if (ctx.message.voice) {
                     const user = await collection.findOne({conver: ctx.message.reply_to_message.message_id})
@@ -107,7 +107,7 @@ bot.on('message', async ctx => {
         } else {
             // let user = await collection.findOne({user_id: ctx.from.id});
             // if (user == null) return await ctx.scene.enter('nameget');
-            // await ctx.copyMessage(1334751749, {caption: 'qq'})
+            // await ctx.copyMessage(5103314362, {caption: 'qq'})
             if(ctx.message.voice) {
                 const day = await new Date()
                 let userdb = await collection.findOne({user_id: ctx.from.id})
@@ -117,7 +117,7 @@ bot.on('message', async ctx => {
                     await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {conver: []}})
                 }
                 const audiourl = await ctx.tg.getFileLink(ctx.message.voice.file_id)
-                const sendedmessage = await ctx.tg.sendVoice(1334751749, {url: audiourl.href, filename: 'voice'}, {caption: `<b>From</b>: ${userdb.realname}`, parse_mode: "HTML"})
+                const sendedmessage = await ctx.tg.sendVoice(5103314362, {url: audiourl.href, filename: 'voice'}, {caption: `<b>From</b>: ${userdb.realname}`, parse_mode: "HTML"})
                 await collection.findOneAndUpdate({user_id: ctx.from.id}, {$push: {conver: sendedmessage.message_id}})
                 return ctx.reply('👨🏻‍💻 Forwarded')
             }else if(ctx.message.photo){
@@ -129,7 +129,7 @@ bot.on('message', async ctx => {
                     await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {conver: []}})
                 }
                 const photourl = await ctx.tg.getFileLink(ctx.message.photo.pop().file_id)
-                const sendedmessage = await ctx.tg.sendPhoto(1334751749, {url: photourl.href, filename: 'photo'}, {caption: `<b>From</b>: ${userdb.realname}`, parse_mode: "HTML"})
+                const sendedmessage = await ctx.tg.sendPhoto(5103314362, {url: photourl.href, filename: 'photo'}, {caption: `<b>From</b>: ${userdb.realname}`, parse_mode: "HTML"})
                 await collection.findOneAndUpdate({user_id: ctx.from.id}, {$push: {conver: sendedmessage.message_id}})
                 return ctx.reply('👨🏻‍💻 Forwarded')
             }else if(ctx.message.text){
@@ -142,7 +142,7 @@ bot.on('message', async ctx => {
                 }
                 // const uzbekistanDate = day.toLocaleString('ru-RU', {timeZone: 'Asia/Tashkent', day: '2-digit', month: '2-digit', hour: 'numeric', minute: 'numeric'});
                 const text = ctx.message.text;
-                const sendedmessage = await ctx.tg.sendMessage(1334751749, `<b>${userdb.realname}</b>:\n${text}`, {parse_mode: 'HTML'})
+                const sendedmessage = await ctx.tg.sendMessage(5103314362, `<b>${userdb.realname}</b>:\n${text}`, {parse_mode: 'HTML'})
                 await collection.findOneAndUpdate({user_id: ctx.from.id}, {$push: {conver: sendedmessage.message_id}})
                 return ctx.reply('👨🏻‍💻 Forwarded')
             }else {

@@ -3,9 +3,6 @@ const { collection, ObjectId } = require('./additions/db');
 require('dotenv').config();
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const { DateTime } = require('luxon');
-bot.start((ctx) => ctx.reply(`👨🏻‍💻 Greetings, ${ctx.from.first_name}! I am Mr. ZADE's personal messenger and can forward your text, audio and photo messages. Just send me a message!`));
-bot.help((ctx) => ctx.reply('👨🏻‍💻 Send me a message:'));
-bot.launch({dropPendingUpdates: true});
 const { enter, leave } = Scenes.Stage;
 
 const nameget = new Scenes.BaseScene("nameget");
@@ -46,12 +43,87 @@ nameget.leave(async ctx => {
     }
 })
 
-const stage = new Scenes.Stage([nameget]);  
+const news = new Scenes.BaseScene("news");
+
+news.enter(async ctx => {
+    try {
+        await ctx.reply('Ok... Send me any message:', {reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+news.on('message', async ctx => {
+    try {
+        if(ctx.message.text == 'Cancel 🔴') {
+            await ctx.reply('Canceled ✅', {reply_markup: {remove_keyboard: true}})
+            return await ctx.scene.leave('news')
+        }
+        await ctx.reply('Working on it...', {reply_markup: {remove_keyboard: true}})
+        const quat = await ctx.reply('✴️ Are you sure to send this message to all users of your bot?\n(If you want to change the message, before clicking on the button copy your message!)', {reply_markup: {inline_keyboard: [[Markup.button.callback('Yes 🟢', 'newssend'), Markup.button.callback('No, i want to edit 🔴', 'newscancsend')]]}})
+        await collection.findOneAndUpdate({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')}, {$set: {msgid: ctx.message.message_id, qm: quat.message_id}})
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+news.action('newscancsend', async ctx => {
+    try {
+        const admdb = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+        await ctx.deleteMessage(admdb.msgid)
+        await ctx.deleteMessage(admdb.qm)
+        await ctx.scene.enter('news')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+news.action('newssend', async ctx => {
+    try {
+        const admdb = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+        await ctx.deleteMessage(admdb.qm)
+        await ctx.reply('Sending...')
+        for (let i = 0; i < admdb.users.length; i++) {
+            try {
+                await ctx.tg.copyMessage(admdb.users[i], ctx.chat.id, admdb.msgid)
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        await ctx.reply('Sending completed ✅')
+        await ctx.scene.leave('news')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+
+const stage = new Scenes.Stage([nameget, news]);  
 bot.use(session());
 bot.use(stage.middleware());  
 
+bot.start(async (ctx) => {
+    try {
+        let usindb = await collection.findOne({users: ctx.from.id})
+        if (usindb == null) await collection.findOneAndUpdate({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')}, {$push: {users: ctx.from.id}})
+        await ctx.reply(`👨🏻‍💻 Greetings, ${ctx.from.first_name}! I am Mr. ZADE's personal messenger and can forward your text, audio and photo messages. Just send me a message!`)
+    } catch (e) {
+        console.error(e);
+    }
+});
 
-// 1334751749, 
+bot.help((ctx) => ctx.reply('👨🏻‍💻 Send me a message:'));
+
+bot.command('news', async ctx => {
+    try {
+        if (ctx.from.id == 1334751749 || ctx.from.id == 5103314362) return await ctx.scene.enter('news')
+        await ctx.reply('You don\'t have enough rights ⛔️')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+// 1334751749
 bot.on('message', async ctx => {
     try {
         if (ctx.from.id == 1334751749) {
@@ -167,12 +239,7 @@ bot.on('message', async ctx => {
 })
 
 
-
-
-
-
-
-
+bot.launch({dropPendingUpdates: true});
 
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));

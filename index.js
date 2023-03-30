@@ -97,8 +97,112 @@ news.action('newssend', async ctx => {
     }
 })
 
+const groupanalyse = new Scenes.BaseScene("groupanalyse");
 
-const stage = new Scenes.Stage([nameget, news]);  
+groupanalyse.enter(async ctx => {
+    try {
+        await ctx.replyWithPhoto({source: './zadasc.jpg'}, {caption: 'Choose your group:', reply_markup: {inline_keyboard: [[Markup.button.callback('Groots 🌴', 'g1'), Markup.button.callback('Groots 🌴🌴', 'g2')], [Markup.button.callback('Cancel ⛔️', 'cancgr')]]}})
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+groupanalyse.action('g1', async ctx => {
+    try {
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.scene.enter('gfgp')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+groupanalyse.action('g2', async ctx => {
+    try {
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.scene.enter('gsgp')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+groupanalyse.action('cancgr', async ctx => {
+    try {
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.reply('Canceled ✅')
+        await ctx.scene.leave('groupanalyse')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+const gfgp = new Scenes.BaseScene("gfgp");
+
+gfgp.enter(async ctx => {
+    try {
+        await ctx.reply('👨🏻‍💻 Enter the password to join the group number 1:', {reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+gfgp.on('text', async ctx => {
+    try {
+        if(ctx.message.text == 'Cancel 🔴') {
+            await ctx.reply('Canceled ✅', {reply_markup: {remove_keyboard: true}})
+            await ctx.scene.leave('gfgp')
+        } else {
+            const passwords = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+        
+            if(ctx.message.text == passwords.g1p) {
+                await collection.findOneAndUpdate({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')}, {$push: {fgroup: ctx.from.id}})
+                await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {gr: 1, hws: passwords.fgroop_hw}})
+                await ctx.reply('Success! You have successfully joined the group number 1 ✅', {reply_markup: {remove_keyboard: true}})
+                await ctx.scene.leave('gfgp')
+            }else {
+                await ctx.reply('Incorrect password ⚠️')
+                await ctx.scene.enter('gfgp')
+            }
+        }
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+const gsgp = new Scenes.BaseScene("gsgp");
+
+gsgp.enter(async ctx => {
+    try {
+        await ctx.reply('👨🏻‍💻 Enter the password to join the group number 2:', {reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+gsgp.on('text', async ctx => {
+    try {
+        if(ctx.message.text == 'Cancel 🔴') {
+            await ctx.reply('Canceled ✅', {reply_markup: {remove_keyboard: true}})
+            await ctx.scene.leave('gsgp')
+        } else {
+            const passwords = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+
+            if(ctx.message.text == passwords.g2p) {
+                await collection.findOneAndUpdate({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')}, {$push: {sgroup: ctx.from.id}})
+                await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {gr: 2, hws: passwords.sgroop_hw}})
+                await ctx.reply('Success! You have successfully joined the group number 2 ✅', {reply_markup: {remove_keyboard: true}})
+                await ctx.scene.leave('gsgp')
+            }else {
+                await ctx.reply('Incorrect password ⚠️')
+                await ctx.scene.enter('gsgp')
+            }
+        }
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+
+const stage = new Scenes.Stage([nameget, news, groupanalyse, gfgp, gsgp]);  
 bot.use(session());
 bot.use(stage.middleware());  
 
@@ -112,12 +216,25 @@ bot.start(async (ctx) => {
     }
 });
 
-bot.help((ctx) => ctx.reply('👨🏻‍💻 Send me a message:'));
+bot.help((ctx) => ctx.reply('👨🏻‍💻 Just send me a message to forward it:'));
 
 bot.command('news', async ctx => {
     try {
         if (ctx.from.id == 1334751749 || ctx.from.id == 5103314362) return await ctx.scene.enter('news')
         await ctx.reply('You don\'t have enough rights ⛔️')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bot.command('z_school', async ctx => {
+    try {
+        const ingrf = await collection.findOne({fgroup: ctx.from.id})
+        const ingrs = await collection.findOne({sgroup: ctx.from.id})
+
+        if(ingrf != null || ingrs != null) return await ctx.reply('👤 You are already connected to one of the groups you selected earlier.')
+
+        await ctx.scene.enter('groupanalyse')
     } catch (e) {
         console.error(e);
     }

@@ -201,8 +201,108 @@ gsgp.on('text', async ctx => {
     }
 })
 
+let points = 0
+const gfedp = new Scenes.BaseScene("gfedp");
 
-const stage = new Scenes.Stage([nameget, news, groupanalyse, gfgp, gsgp]);  
+gfedp.enter(async ctx => {
+    try {
+        await ctx.reply('👨🏻‍💻 Enter how many points you want to add for the first group:', {reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+
+gfedp.on('text', async ctx => {
+    try {
+        if(ctx.message.text == 'Cancel 🔴') {
+            await ctx.reply('Canceled ✅', {reply_markup: {remove_keyboard: true}})
+            await ctx.scene.leave('gfedp')
+        } else {
+            let check = await isNaN(ctx.message.text)
+            if (check == true) return await ctx.scene.enter('gfedp')
+            await ctx.reply('Working on it...', {reply_markup: {remove_keyboard: true}})
+            points = Number(ctx.message.text)
+            await ctx.reply('Are you shure?', {reply_markup: {inline_keyboard: [[Markup.button.callback('Yes, 100%', 'yedf'), Markup.button.callback('Edit', 'ednf')]]}})
+        }
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+gfedp.action('yedf', async ctx => {
+    try {
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+        const res = await db.fgs + points
+        await collection.findOneAndUpdate({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')}, {$set: {fgs: res}})
+        await ctx.reply('Change completed 👨🏻‍💻')
+        await ctx.scene.leave('gfedp')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+gfedp.action('ednf', async ctx => {
+    try {
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.scene.enter('gfedp')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+const gsedp = new Scenes.BaseScene("gsedp");
+
+gsedp.enter(async ctx => {
+    try {
+        await ctx.reply('👨🏻‍💻 Enter how many points you want to add for the second group:', {reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+
+gsedp.on('text', async ctx => {
+    try {
+        if(ctx.message.text == 'Cancel 🔴') {
+            await ctx.reply('Canceled ✅', {reply_markup: {remove_keyboard: true}})
+            await ctx.scene.leave('gsedp')
+        } else {
+            let check = await isNaN(ctx.message.text)
+            if (check == true) return await ctx.scene.enter('gsedp')
+            await ctx.reply('Working on it...', {reply_markup: {remove_keyboard: true}})
+            points = Number(ctx.message.text)
+            await ctx.reply('Are you shure?', {reply_markup: {inline_keyboard: [[Markup.button.callback('Yes, 100%', 'yeds'), Markup.button.callback('Edit', 'edns')]]}})
+        }
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+gsedp.action('yeds', async ctx => {
+    try {
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+        const res = await db.sgs + points
+        await collection.findOneAndUpdate({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')}, {$set: {sgs: res}})
+        await ctx.reply('Change completed 👨🏻‍💻')
+        await ctx.scene.leave('gsedp')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+gsedp.action('edns', async ctx => {
+    try {
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.scene.enter('gsedp')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+const stage = new Scenes.Stage([nameget, news, groupanalyse, gfgp, gsgp, gfedp, gsedp]);  
 bot.use(session());
 bot.use(stage.middleware());  
 
@@ -235,6 +335,114 @@ bot.command('z_school', async ctx => {
         if(ingrf != null || ingrs != null) return await ctx.reply('👤 You are already connected to one of the groups you selected earlier.')
 
         await ctx.scene.enter('groupanalyse')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bot.command('update', async ctx => {
+    try {
+        if(ctx.from.id != 5103314362) return await ctx.reply('🔒')
+        const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+        for (let i = 0; i < db.fgroup.length; i++) {
+            await ctx.tg.sendMessage(db.fgroup[i], 'New update ⬆️\n\n- Group statistics through the command - /stats', {reply_markup: {keyboard: [['STATS 📊']], resize_keyboard: true}})
+        }
+        for (let i = 0; i < db.sgroup.length; i++) {
+            await ctx.tg.sendMessage(db.sgroup[i], 'New update ⬆️\n\n- Group statistics through the command - /stats', {reply_markup: {keyboard: [['STATS 📊']], resize_keyboard: true}})
+        }
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bot.command('stats', async ctx => {
+    try {
+        const ingrf = await collection.findOne({fgroup: ctx.from.id})
+        const ingrs = await collection.findOne({sgroup: ctx.from.id})
+
+        if(ingrf != null || ingrs != null) {
+            const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+            if(db.fgs == db.sgs) {
+                await ctx.replyWithPhoto({source: './grootss.jpg'}, {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML'})
+            }else if(db.fgs > db.sgs) {
+                await ctx.replyWithPhoto({source: './grootfl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML'})
+            }else {
+                await ctx.replyWithPhoto({source: './groottl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML'})
+            }
+        }else if(ctx.from.id == 1334751749) {
+            const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+            if(db.fgs == db.sgs) {
+                await ctx.replyWithPhoto({source: './grootss.jpg'}, {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+            }else if(db.fgs > db.sgs) {
+                await ctx.replyWithPhoto({source: './grootfl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+            }else {
+                await ctx.replyWithPhoto({source: './groottl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+            }
+        }else {
+            await ctx.reply('This command can only be used by ZADE school students ⚠️')
+        }
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bot.hears(['STATS 📊'], async ctx => {
+    try {
+        const ingrf = await collection.findOne({fgroup: ctx.from.id})
+        const ingrs = await collection.findOne({sgroup: ctx.from.id})
+
+        if(ingrf != null || ingrs != null) {
+            const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+            if(db.fgs == db.sgs) {
+                await ctx.replyWithPhoto({source: './grootss.jpg'}, {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML'})
+            }else if(db.fgs > db.sgs) {
+                await ctx.replyWithPhoto({source: './grootfl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML'})
+            }else {
+                await ctx.replyWithPhoto({source: './groottl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML'})
+            }
+        }else if(ctx.from.id == 1334751749) {
+            const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+            if(db.fgs == db.sgs) {
+                await ctx.replyWithPhoto({source: './grootss.jpg'}, {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+            }else if(db.fgs > db.sgs) {
+                await ctx.replyWithPhoto({source: './grootfl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+            }else {
+                await ctx.replyWithPhoto({source: './groottl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+            }
+        }else {
+            await ctx.reply('This command can only be used by ZADE school students ⚠️')
+        }
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bot.action('esc', async ctx => {
+    try {
+        const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.reply(`🗂 Points Editor:\n\n<b>GROOTS I: <i>${db.fgs}</i> p</b>\n<b>GROOTS II: <i>${db.sgs}</i> p</b>`, {parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit G1', 'gfed'), Markup.button.callback('Edit G2', 'gsed')]]}})
+        await ctx.answerCbQuery()
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bot.action('gfed', async ctx => {
+    try {
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.scene.enter('gfedp')
+        await ctx.answerCbQuery()
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bot.action('gsed', async ctx => {
+    try {
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.scene.enter('gsedp')
+        await ctx.answerCbQuery()
     } catch (e) {
         console.error(e);
     }

@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "chatgpt": "^5.0.9",
     "dotenv": "^16.0.3",
     "luxon": "^3.2.1",
     "mongodb": "^5.0.1",

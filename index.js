@@ -47,7 +47,7 @@ const news = new Scenes.BaseScene("news");
 
 news.enter(async ctx => {
     try {
-        await ctx.reply('Ok... Send me any message:', {reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
+        await ctx.replyWithPhoto({source: './news.jpg'}, {caption: 'Ok... Send me any message:', reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
     } catch (e) {
         console.error(e);
     }

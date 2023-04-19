@@ -397,7 +397,7 @@ coursepay.enter(async ctx => {
             }
         }
         const cardph = await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADHGRABg0v3F36r7EgInSWO169e7CrAALXyTEbHEHxSdVGe1c-Rhd2AQADAgADeQADLwQ', {parse_mode: 'MarkdownV2', caption: '`8600490456114966`', reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
-        const awaiting = await ctx.reply('👨🏻‍💻 Pay 2,000,000 sum to the card above and send screenshot of payment receipt:')
+        const awaiting = await ctx.reply('👨🏻‍💻 Pay to the card above and send screenshot of payment receipt:')
         await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {b_trash: [cardph.message_id, awaiting.message_id]}})
     } catch (e) {
         console.error(e);
@@ -497,14 +497,14 @@ pointofp.on('text', async ctx => {
                     if(e.response.error_code == 400 || e.on.payload.message_thread_id == undefined) {
                         await ctx.reply('😡 So why did you have to remove it? Okay, I\'m kind, here\'s a new one for you:')
                         setTimeout(async () => {
-                            const bmeid = await ctx.sendVideo('BAACAgIAAxkBAAIVfGQ8QWBGBBPsH7JErDbVpmXCOi4EAALJKQACNzmZSYfJo8Cz8xTULwQ', {caption: 'GENETICS 🧬 - ZADE\'S BOOK\nBook consists of 8 lessons and contains the explanation of concepts and tasks to solve.\n\n<b>The prise of book is 100 000 sums.</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('ORDER A BOOK 🧬', 'b_order')]], remove_keyboard: true}})
+                            const bmeid = await ctx.sendPhoto('AgACAgIAAx0Ccqjl3gADI2RADvVJfeGie5FuAAEMTh3o6yJCYQACncgxG7bfAUrlkqVP4PJCYwEAAwIAA3kAAy8E', {caption: 'GENETICS 🧬 - ZADE\'S BOOK\nBook consists of 8 lessons and contains the explanation of concepts and tasks to solve.\n\n<b>The prise of book is 100 000 sums.</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('ORDER A BOOK 🧬', 'b_order')]], remove_keyboard: true}})
                             return await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {bmesid: bmeid.message_id}})
                         }, 1500);
                     }
                 }
                 return
             }
-            const bmeid = await ctx.sendVideo('BAACAgIAAxkBAAIVfGQ8QWBGBBPsH7JErDbVpmXCOi4EAALJKQACNzmZSYfJo8Cz8xTULwQ', {caption: 'GENETICS 🧬 - ZADE\'S BOOK\nBook consists of 8 lessons and contains the explanation of concepts and tasks to solve.\n\n<b>The prise of book is 100 000 sums.</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('ORDER A BOOK 🧬', 'b_order')]], remove_keyboard: true}})
+            const bmeid = await ctx.sendPhoto('AgACAgIAAx0Ccqjl3gADI2RADvVJfeGie5FuAAEMTh3o6yJCYQACncgxG7bfAUrlkqVP4PJCYwEAAwIAA3kAAy8E', {caption: 'GENETICS 🧬 - ZADE\'S BOOK\nBook consists of 8 lessons and contains the explanation of concepts and tasks to solve.\n\n<b>The prise of book is 100 000 sums.</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('ORDER A BOOK 🧬', 'b_order')]], remove_keyboard: true}})
             return await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {bmesid: bmeid.message_id}})
         }else if(ctx.message.text == 'PAY FOR THE COURSE 📚') {
             const db = await collection.findOne({user_id: ctx.from.id})
@@ -515,14 +515,14 @@ pointofp.on('text', async ctx => {
                     if(e.response.error_code == 400 || e.on.payload.message_thread_id == undefined) {
                         await ctx.reply('😡 So why did you have to remove it? Okay, I\'m kind, here\'s a new one for you:')
                         setTimeout(async () => {
-                            const cmeid = await ctx.sendVideo('CgACAgIAAx0Ccqjl3gADFWRABMbGz2zTjm-0dwGjbE9ln5q_AAJUJwACtt8BSon-oFw6SWNYLwQ', {caption: 'ZADE\'S SCHOOL 📚 BIO|CHEM COURSE\n\n<b>The monthly fee for the course is 2,000,000 sum</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('PAY FOR THE COURSE  📚', 'c_pay')]], remove_keyboard: true}})
+                            const cmeid = await ctx.sendVideo('CgACAgIAAx0Ccqjl3gADFWRABMbGz2zTjm-0dwGjbE9ln5q_AAJUJwACtt8BSon-oFw6SWNYLwQ', {caption: 'ZADE\'S SCHOOL 📚 BIO|CHEM COURSE\n\nThis course provides an in-depth exploration of the fundamental principles of biology and chemistry. Through a combination of lectures and interactive class discussions, students will gain a comprehensive understanding of the intricate relationships between biological systems and chemical processes.\n\n<b>The payment amount is already told by Mr Zade. If you have doubts regarding the price please first cancel this menu and write here.</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('PAY FOR THE COURSE  📚', 'c_pay')]], remove_keyboard: true}})
                             return await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: cmeid.message_id}})
                         }, 1500);
                     }
                 }
                 return
             }
-            const cmeid = await ctx.sendVideo('CgACAgIAAx0Ccqjl3gADFWRABMbGz2zTjm-0dwGjbE9ln5q_AAJUJwACtt8BSon-oFw6SWNYLwQ', {caption: 'ZADE\'S SCHOOL 📚 BIO|CHEM COURSE\n\n<b>The monthly fee for the course is 2,000,000 sum</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('PAY FOR THE COURSE  📚', 'c_pay')]], remove_keyboard: true}})
+            const cmeid = await ctx.sendVideo('CgACAgIAAx0Ccqjl3gADFWRABMbGz2zTjm-0dwGjbE9ln5q_AAJUJwACtt8BSon-oFw6SWNYLwQ', {caption: 'ZADE\'S SCHOOL 📚 BIO|CHEM COURSE\n\nThis course provides an in-depth exploration of the fundamental principles of biology and chemistry. Through a combination of lectures and interactive class discussions, students will gain a comprehensive understanding of the intricate relationships between biological systems and chemical processes.\n\n<b>The payment amount is already told by Mr Zade. If you have doubts regarding the price please first cancel this menu and write here.</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('PAY FOR THE COURSE  📚', 'c_pay')]], remove_keyboard: true}})
             return await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: cmeid.message_id}})
         }else if(ctx.message.text == 'Cancel 🔴') {
             const db = await collection.findOne({user_id: ctx.from.id})

@@ -735,7 +735,7 @@ bot.action('joto', async ctx => {
 bot.action('b_payd', async ctx => {
     try {
         const text = await Number(ctx.callbackQuery.message.caption.split(' ')[0].replace("#", "")) 
-        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.editMessageCaption(`${ctx.callbackQuery.message.caption}\n\nACCEPTED ✅`)
         const db = await collection.findOne({upid: text})
         await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADF2RABUbBkRL1MVGdEAUnPkhQkhYvAALlxzEbHEH5SeRB81gysZu_AQADAgADeQADLwQ',{caption: `💸 Successful payment for the BOOK | GENETICS 🧬! The payment was successfully verified and if you have any questions, you can write here to contact Mr. Zade`})
         await collection.findOneAndUpdate({upid: text}, {$set: {upid: 'none'}})
@@ -749,7 +749,7 @@ bot.action('b_payd', async ctx => {
 bot.action('b_payr', async ctx => {
     try {
         const text = await Number(ctx.callbackQuery.message.caption.split(' ')[0].replace("#", "")) 
-        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.editMessageCaption(`${ctx.callbackQuery.message.caption}\n\nREJECTED ❌`)
         const db = await collection.findOne({upid: text})
         await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADFmRABRzfB9adTdZNPRkNXJYdHWrbAALmxzEbHEH5SfYP_i8c5k4fAQADAgADeQADLwQ',{caption: `💸 Payment Failed (BOOK | GENETICS 🧬)! Payment Failed and if you have any questions, you can write here to contact Mr. Zade`})
         await collection.findOneAndUpdate({upid: text}, {$set: {upid: 'none'}})
@@ -763,7 +763,7 @@ bot.action('b_payr', async ctx => {
 bot.action('c_payd', async ctx => {
     try {
         const text = await Number(ctx.callbackQuery.message.caption.split(' ')[0].replace("#", "")) 
-        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.editMessageCaption(`${ctx.callbackQuery.message.caption}\n\nACCEPTED ✅`)
         const db = await collection.findOne({upid: text})
         await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADF2RABUbBkRL1MVGdEAUnPkhQkhYvAALlxzEbHEH5SeRB81gysZu_AQADAgADeQADLwQ',{caption: `💸 Successful payment for the COURSE | ZADE'S SCHOOL 📚! The payment was successfully verified and if you have any questions, you can write here to contact Mr. Zade`})
         await collection.findOneAndUpdate({upid: text}, {$set: {upid: 'none'}})
@@ -777,7 +777,7 @@ bot.action('c_payd', async ctx => {
 bot.action('c_payr', async ctx => {
     try {
         const text = await Number(ctx.callbackQuery.message.caption.split(' ')[0].replace("#", "")) 
-        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.editMessageCaption(`${ctx.callbackQuery.message.caption}\n\nREJECTED ❌`)
         const db = await collection.findOne({upid: text})
         await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADFmRABRzfB9adTdZNPRkNXJYdHWrbAALmxzEbHEH5SfYP_i8c5k4fAQADAgADeQADLwQ',{caption: `💸 Payment Failed (COURSE | ZADE'S SCHOOL 📚)! Payment Failed and if you have any questions, you can write here to contact Mr. Zade`})
         await collection.findOneAndUpdate({upid: text}, {$set: {upid: 'none'}})

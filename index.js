@@ -626,6 +626,7 @@ bot.command('update', async ctx => {
         for (let i = 0; i < db.sgroup.length; i++) {
             await ctx.tg.sendMessage(db.sgroup[i], 'New update ⬆️\n\n- Improved script reading speed 📶\n- Payment menu for the course and purchase of the book GENETICS 🧬\n- A database for bot files has been created, if you are interested, here is the <a href="https://t.me/+Zle_ffKNuro2NDhi">channel</a> 🛢', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
         }
+        await ctx.tg.sendMessage(1334751749, 'New update ⬆️\n\n- Improved script reading speed 📶\n- Payment menu for the course and purchase of the book GENETICS 🧬\n- A database for bot files has been created, if you are interested, here is the <a href="https://t.me/+Zle_ffKNuro2NDhi">channel</a> 🛢', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
     } catch (e) {
         console.error(e);
     }

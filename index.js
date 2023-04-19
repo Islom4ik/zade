@@ -47,7 +47,7 @@ const news = new Scenes.BaseScene("news");
 
 news.enter(async ctx => {
     try {
-        await ctx.replyWithPhoto({source: './news.jpg'}, {caption: 'Ok... Send me any message:', reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
+        await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADA2Q-cDnND2ZOpLePAw3JRoeRMxbGAALSyTEbHEHxSdaLf-9e-BlXAQADAgADeQADLwQ', {caption: 'Ok... Send me any message:', reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
     } catch (e) {
         console.error(e);
     }
@@ -101,7 +101,7 @@ const groupanalyse = new Scenes.BaseScene("groupanalyse");
 
 groupanalyse.enter(async ctx => {
     try {
-        await ctx.replyWithPhoto({source: './zadasc.jpg'}, {caption: 'Choose your group:', reply_markup: {inline_keyboard: [[Markup.button.callback('Groots 🌴', 'g1'), Markup.button.callback('Groots 🌴🌴', 'g2')], [Markup.button.callback('Cancel ⛔️', 'cancgr')]]}})
+        await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADBWQ-cKDjYx0O85XHaq5-bFHZei6rAALWyTEbHEHxSalM85cN5J0QAQADAgADeAADLwQ', {caption: 'Choose your group:', reply_markup: {inline_keyboard: [[Markup.button.callback('Groots 🌴', 'g1'), Markup.button.callback('Groots 🌴🌴', 'g2')], [Markup.button.callback('Cancel ⛔️', 'cancgr')]]}})
     } catch (e) {
         console.error(e);
     }
@@ -130,6 +130,14 @@ groupanalyse.action('cancgr', async ctx => {
         await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
         await ctx.reply('Canceled ✅')
         await ctx.scene.leave('groupanalyse')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+groupanalyse.on('message', async ctx => {
+    try {
+        return ctx.reply('Click on one of the buttons ⬆️')
     } catch (e) {
         console.error(e);
     }
@@ -302,7 +310,274 @@ gsedp.action('edns', async ctx => {
     }
 })
 
-const stage = new Scenes.Stage([nameget, news, groupanalyse, gfgp, gsgp, gfedp, gsedp]);  
+const bookord = new Scenes.BaseScene("bookord");
+
+bookord.enter(async ctx => {
+    try {
+        const db = await collection.findOne({user_id: ctx.from.id})
+        if (db.bmesid != 0) {
+            try {
+                await ctx.deleteMessage(db.bmesid)
+                await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {bmesid: 0}})
+            } catch (e) {
+                await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {bmesid: 0}})
+            }
+        }
+        if (db.cmesid != 0) {
+            try {
+                await ctx.deleteMessage(db.cmesid)
+                await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: 0}})
+            } catch (e) {
+                await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: 0}})
+            }
+        }
+        const cardph = await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADBmQ-cMMAAUji3w68l66Of9w13ZirdwAC18kxGxxB8UkUoG7eWQIYSQEAAwIAA3kAAy8E', {parse_mode: 'MarkdownV2', caption: '`8600490456114966`', reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
+        const awaiting = await ctx.reply('👨🏻‍💻 Pay 100,000 sum to the card above and send screenshot of payment receipt:')
+        await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {b_trash: [cardph.message_id, awaiting.message_id]}})
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bookord.on('text', async ctx => {
+    try {
+        if(ctx.message.text == 'Cancel 🔴') {
+            await ctx.reply('Canceled ✅', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']],resize_keyboard: true}})
+            return ctx.scene.leave('bookord')
+        }
+        await ctx.reply('👨🏻‍💻 Please send a screenshot of the payment:')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bookord.on('photo', async ctx => {
+    try {
+        await ctx.reply('Working on it...', {reply_markup: {remove_keyboard: true}})
+        const db = await collection.findOne({user_id: ctx.from.id})
+        for (let i = 0; i < db.b_trash.length; i++) {
+            try {
+                await ctx.deleteMessage(db.b_trash[i])
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        const addb = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+        let rs = addb.payids + 1
+        await ctx.tg.sendPhoto(1334751749, ctx.message.photo.pop().file_id, {caption: `#${rs} New payment for a book | GENETICS 🧬:\n\n<b>Real Name:</b> <a href="tg://user?id=${db.user_id}">${db.realname}</a>\n<b>User Name:</b> <i>@${db.username}</i>\n<b>TG Account Name:</b> <i>${db.accfirstname}</i>\n<b>User ID:</b> <i>${db.user_id}</i>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('DONE ✅', 'b_payd')], [Markup.button.callback('REJECT ❌', 'b_payr')]]}})
+        await collection.findOneAndUpdate({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')}, {$set: {payids: rs}})
+        await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {upid: rs}})
+        await ctx.reply('💸 Payment sent for review, please wait for a response...', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']],resize_keyboard: true}})
+        await ctx.scene.leave('bookord')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+const coursepay = new Scenes.BaseScene("coursepay");
+
+coursepay.enter(async ctx => {
+    try {
+        const db = await collection.findOne({user_id: ctx.from.id})
+        if (db.bmesid != 0) {
+            try {
+                await ctx.deleteMessage(db.bmesid)
+                await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {bmesid: 0}})
+            } catch (e) {
+                await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {bmesid: 0}})
+            }
+        }
+        if (db.cmesid != 0) {
+            try {
+                await ctx.deleteMessage(db.cmesid)
+                await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: 0}})
+            } catch (e) {
+                await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: 0}})
+            }
+        }
+        const cardph = await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADBmQ-cMMAAUji3w68l66Of9w13ZirdwAC18kxGxxB8UkUoG7eWQIYSQEAAwIAA3kAAy8E', {parse_mode: 'MarkdownV2', caption: '`8600490456114966`', reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
+        const awaiting = await ctx.reply('👨🏻‍💻 Pay 2,000,000 sum to the card above and send screenshot of payment receipt:')
+        await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {b_trash: [cardph.message_id, awaiting.message_id]}})
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+coursepay.on('text', async ctx => {
+    try {
+        if(ctx.message.text == 'Cancel 🔴') {
+            await ctx.reply('Canceled ✅', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']],resize_keyboard: true}})
+            return ctx.scene.leave('coursepay')
+        }
+        await ctx.reply('👨🏻‍💻 Please send a screenshot of the payment:')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+coursepay.on('photo', async ctx => {
+    try {
+        await ctx.reply('Working on it...', {reply_markup: {remove_keyboard: true}})
+        const db = await collection.findOne({user_id: ctx.from.id})
+        for (let i = 0; i < db.b_trash.length; i++) {
+            try {
+                await ctx.deleteMessage(db.b_trash[i])
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        const addb = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+        let rs = addb.cpayids + 1
+        await ctx.tg.sendPhoto(1334751749, ctx.message.photo.pop().file_id, {caption: `#${rs} New payment for a course | ZADE'S SCHOOL 📚:\n\n<b>Real Name:</b> <a href="tg://user?id=${db.user_id}">${db.realname}</a>\n<b>User Name:</b> <i>@${db.username}</i>\n<b>TG Account Name:</b> <i>${db.accfirstname}</i>\n<b>User ID:</b> <i>${db.user_id}</i>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('DONE ✅', 'c_payd')], [Markup.button.callback('REJECT ❌', 'c_payr')]]}})
+        await collection.findOneAndUpdate({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')}, {$set: {cpayids: rs}})
+        await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {upid: rs}})
+        await ctx.reply('💸 Payment sent for review, please wait for a response...', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']],resize_keyboard: true}})
+        await ctx.scene.leave('coursepay')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+const namefpay = new Scenes.BaseScene("namefpay");
+
+namefpay.enter(async ctx => {
+    try {
+        return await ctx.reply('👨🏻‍💻 It is important for us that you write your real name for further identification ‼️\nIntroduce yourself, write your real name:')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+namefpay.on('text', async ctx => {
+    try {
+        const searchString = /[\!\#\_\№\"\;\$\%\^\:\&\?\*\(\)\{\}\[\]\?\/\,.\\\|\/\+\=\d]+/g;
+        if (ctx.message.text.match(searchString)) return await ctx.reply('👨🏻‍💻 Please enter your real name:');
+        const load = await ctx.reply('👨🏻‍💻 Noting...')
+        const db = await collection.findOne({user_id: ctx.from.id})
+        if(db == null) {
+            await collection.insertOne({
+                realname: ctx.message.text,
+                username: ctx.from.username || 'none',
+                accfirstname: ctx.from.first_name,
+                user_id: ctx.from.id,
+                conver: [],
+                bmesid: 0,
+                cmesid: 0
+            })
+        }else {
+            await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {realname: ctx.message.text, username: ctx.from.username || 'none', user_id: ctx.from.id, bmesid: 0}})
+        }
+        await ctx.deleteMessage(load.message_id);
+        await ctx.reply(`👨🏻‍💻 Success! Hello ${ctx.message.text}`);
+        return await ctx.scene.enter('pointofp')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+const pointofp = new Scenes.BaseScene("pointofp");
+
+pointofp.enter(async ctx => {
+    try {
+        return await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADBGQ-cJGzN39U5pLG_MTh5tftezhbAALVyTEbHEHxSQ7xS0jLQv_mAQADAgADeQADLwQ', {caption: '👨🏻‍💻 What the point of the payment?', reply_markup: {keyboard: [['PAY FOR THE BOOK 🧬'], ['PAY FOR THE COURSE 📚'], ['Cancel 🔴']], resize_keyboard: true}})
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+pointofp.on('text', async ctx => {
+    try {
+        if(ctx.message.text == 'PAY FOR THE BOOK 🧬') {
+            const db = await collection.findOne({user_id: ctx.from.id})
+            if (db.bmesid != 0) {
+                try {
+                    await ctx.reply('You have already clicked on this button 😡', {reply_to_message_id: db.bmesid})
+                } catch (e) {
+                    if(e.response.error_code == 400 || e.on.payload.message_thread_id == undefined) {
+                        await ctx.reply('😡 So why did you have to remove it? Okay, I\'m kind, here\'s a new one for you:')
+                        setTimeout(async () => {
+                            const bmeid = await ctx.sendVideo('BAACAgIAAxkBAAIVfGQ8QWBGBBPsH7JErDbVpmXCOi4EAALJKQACNzmZSYfJo8Cz8xTULwQ', {caption: 'GENETICS 🧬 - ZADE\'S BOOK\nBook consists of 8 lessons and contains the explanation of concepts and tasks to solve.\n\n<b>The prise of book is 100 000 sums.</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('ORDER A BOOK 🧬', 'b_order')]], remove_keyboard: true}})
+                            return await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {bmesid: bmeid.message_id}})
+                        }, 1500);
+                    }
+                }
+                return
+            }
+            const bmeid = await ctx.sendVideo('BAACAgIAAxkBAAIVfGQ8QWBGBBPsH7JErDbVpmXCOi4EAALJKQACNzmZSYfJo8Cz8xTULwQ', {caption: 'GENETICS 🧬 - ZADE\'S BOOK\nBook consists of 8 lessons and contains the explanation of concepts and tasks to solve.\n\n<b>The prise of book is 100 000 sums.</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('ORDER A BOOK 🧬', 'b_order')]], remove_keyboard: true}})
+            return await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {bmesid: bmeid.message_id}})
+        }else if(ctx.message.text == 'PAY FOR THE COURSE 📚') {
+            const db = await collection.findOne({user_id: ctx.from.id})
+            if (db.cmesid != 0) {
+                try {
+                    await ctx.reply('You have already clicked on this button 😡', {reply_to_message_id: db.cmesid})
+                } catch (e) {
+                    if(e.response.error_code == 400 || e.on.payload.message_thread_id == undefined) {
+                        await ctx.reply('😡 So why did you have to remove it? Okay, I\'m kind, here\'s a new one for you:')
+                        setTimeout(async () => {
+                            const cmeid = await ctx.sendVideo('CgACAgIAAx0Ccqjl3gADEWQ_5XSwpvTx3CPaLCdqOzt3zMVDAAJUJwACtt8BSp2cjuwazs53LwQ', {caption: 'ZADE\'S SCHOOL 📚 BIO|CHEM COURSE\n\n<b>The monthly fee for the course is 2,000,000 sum</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('PAY FOR THE COURSE  📚', 'c_pay')]], remove_keyboard: true}})
+                            return await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: cmeid.message_id}})
+                        }, 1500);
+                    }
+                }
+                return
+            }
+            const cmeid = await ctx.sendVideo('CgACAgIAAx0Ccqjl3gADEWQ_5XSwpvTx3CPaLCdqOzt3zMVDAAJUJwACtt8BSp2cjuwazs53LwQ', {caption: 'ZADE\'S SCHOOL 📚 BIO|CHEM COURSE\n\n<b>The monthly fee for the course is 2,000,000 sum</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('PAY FOR THE COURSE  📚', 'c_pay')]], remove_keyboard: true}})
+            return await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: cmeid.message_id}})
+        }else if(ctx.message.text == 'Cancel 🔴') {
+            const db = await collection.findOne({user_id: ctx.from.id})
+            if (db.bmesid != 0) {
+                try {
+                    await ctx.deleteMessage(db.bmesid)
+                    await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {bmesid: 0}})
+                } catch (e) {
+                    await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {bmesid: 0}})
+                }
+            }
+            if (db.cmesid != 0) {
+                try {
+                    await ctx.deleteMessage(db.cmesid)
+                    await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: 0}})
+                } catch (e) {
+                    await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: 0}})
+                }
+            }
+            await ctx.reply('Canceled ✅', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']],resize_keyboard: true}})
+            return await ctx.scene.leave('pointofp')
+        }else {
+            await ctx.reply('Click on one of the buttons above the keyboard ⬇️')
+        }
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+pointofp.action('b_order', async ctx => {
+    try {
+        const db = await collection.findOne({user_id: ctx.from.id})
+        if(db.upid != 'none') return await ctx.answerCbQuery('Your payment is being verified, please wait while Mr. ZADE will check the payment...', {show_alert: true})
+        await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {bmesid: 0}})
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.scene.enter('bookord')
+        await ctx.answerCbQuery()
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+pointofp.action('c_pay', async ctx => {
+    try {
+        const db = await collection.findOne({user_id: ctx.from.id})
+        if(db.upid != 'none') return await ctx.answerCbQuery('Your payment is being verified, please wait while Mr. ZADE will check the payment...', {show_alert: true})
+        await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: 0}})
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.scene.enter('coursepay')
+        
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+const stage = new Scenes.Stage([nameget, news, groupanalyse, gfgp, gsgp, gfedp, gsedp, bookord, coursepay, namefpay, pointofp]);  
 bot.use(session());
 bot.use(stage.middleware());  
 
@@ -345,24 +620,92 @@ bot.command('update', async ctx => {
         if(ctx.from.id != 5103314362) return await ctx.reply('🔒')
         const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
         for (let i = 0; i < db.fgroup.length; i++) {
-            await ctx.tg.sendMessage(db.fgroup[i], 'New update ⬆️\n\n- Group statistics through the command - /stats', {reply_markup: {keyboard: [['STATS 📊']], resize_keyboard: true}})
+            await ctx.tg.sendMessage(db.fgroup[i], 'New update ⬆️\n\n- Improved script reading speed 📶\n- Payment menu for the course and purchase of the book GENETICS 🧬\n- A database for bot files has been created, if you are interested, here is the <a href="https://t.me/+Zle_ffKNuro2NDhi">channel</a> 🛢', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
         }
         for (let i = 0; i < db.sgroup.length; i++) {
-            await ctx.tg.sendMessage(db.sgroup[i], 'New update ⬆️\n\n- Group statistics through the command - /stats', {reply_markup: {keyboard: [['STATS 📊']], resize_keyboard: true}})
+            await ctx.tg.sendMessage(db.sgroup[i], 'New update ⬆️\n\n- Improved script reading speed 📶\n- Payment menu for the course and purchase of the book GENETICS 🧬\n- A database for bot files has been created, if you are interested, here is the <a href="https://t.me/+Zle_ffKNuro2NDhi">channel</a> 🛢', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
         }
     } catch (e) {
         console.error(e);
     }
 })
 
-bot.command('z_chats', async ctx => {
+// bot.command('z_chats', async ctx => {
+//     try {
+//         let user = await collection.findOne({user_id: ctx.from.id});
+//         if (user == null) return await ctx.scene.enter('nameget');
+//         if(user.joined == true) return await ctx.reply('You have already joined the group')
+//         const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+//         const deljreq = await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCmQ-cQYZYd57lLRAeZl-8vf05mzSAALbyTEbHEHxSWhDHAiuSqYeAQADAgADeQADLwQ', {caption: '👨🏻‍💻 Chats are designed to call any student of ZADE\'s school who wants to help with a problem at any time and discuss any other topic.\n\nSelect the chat you want to join:', reply_markup: {inline_keyboard: [[Markup.button.callback(`Chat 1 X 1 [${db.otochat.length}/2]`, 'joto')]]}})
+//         await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {deljreq: deljreq.message_id}})
+//     } catch (e) {
+//         console.error(e);
+//     }
+// })
+
+
+// BAACAgIAAxkBAAIVfGQ8QWBGBBPsH7JErDbVpmXCOi4EAALJKQACNzmZSYfJo8Cz8xTULwQ
+// AgADySkAAjc5mUk
+bot.command('pay', async ctx => {
     try {
-        let user = await collection.findOne({user_id: ctx.from.id});
-        if (user == null) return await ctx.scene.enter('nameget');
-        if(user.joined == true) return await ctx.reply('You have already joined the group')
-        const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
-        const deljreq = await ctx.replyWithPhoto({source: './chats.jpg'}, {caption: '👨🏻‍💻 Chats are designed to call any student of ZADE\'s school who wants to help with a problem at any time and discuss any other topic.\n\nSelect the chat you want to join:', reply_markup: {inline_keyboard: [[Markup.button.callback(`Chat 1 X 1 [${db.otochat.length}/2]`, 'joto')]]}})
-        await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {deljreq: deljreq.message_id}})
+        const ingrf = await collection.findOne({fgroup: ctx.from.id})
+        const ingrs = await collection.findOne({sgroup: ctx.from.id})
+
+        if(ingrf != null || ingrs != null || ctx.from.id == 1334751749) {
+            const db = await collection.findOne({user_id: ctx.from.id})
+            if(db == null) {
+                await collection.insertOne({
+                    username: ctx.from.username || 'none',
+                    accfirstname: ctx.from.first_name,
+                    user_id: ctx.from.id,
+                    conver: [],
+                    upid: 'none'
+                })
+            }else if(!db.upid) {
+                await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {upid: 'none'}})
+            }
+            await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADBGQ-cJGzN39U5pLG_MTh5tftezhbAALVyTEbHEHxSQ7xS0jLQv_mAQADAgADeQADLwQ', {reply_markup: {inline_keyboard: [[Markup.button.callback('GET STARTED 💳', 'proce')]]}})
+        }else {
+            await ctx.reply('This command can only be used by ZADE school students ⚠️\nTo begin with, you must pass student verification in order to use this command. For verification - /z_school')
+        }
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bot.hears(['PAYMENTS 💳'], async ctx => {
+    try {
+        const ingrf = await collection.findOne({fgroup: ctx.from.id})
+        const ingrs = await collection.findOne({sgroup: ctx.from.id})
+
+        if(ingrf != null || ingrs != null || ctx.from.id == 1334751749) {
+            const db = await collection.findOne({user_id: ctx.from.id})
+            if(db == null) {
+                await collection.insertOne({
+                    username: ctx.from.username || 'none',
+                    accfirstname: ctx.from.first_name,
+                    user_id: ctx.from.id,
+                    conver: [],
+                    upid: 'none'
+                })
+            }else if(!db.upid) {
+                await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {upid: 'none'}})
+            }
+            await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADBGQ-cJGzN39U5pLG_MTh5tftezhbAALVyTEbHEHxSQ7xS0jLQv_mAQADAgADeQADLwQ', {reply_markup: {inline_keyboard: [[Markup.button.callback('GET STARTED 💳', 'proce')]]}})
+        }else {
+            await ctx.reply('This command can only be used by ZADE school students ⚠️\nTo begin with, you must pass student verification in order to use this command. For verification - /z_school')
+        }
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bot.action('proce', async ctx => {
+    try {
+        await ctx.reply('Launching...', {reply_markup: {remove_keyboard: true}})
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        await ctx.scene.enter('namefpay')
+        await ctx.answerCbQuery('Let\'s start...', {show_alert: false})
     } catch (e) {
         console.error(e);
     }
@@ -387,6 +730,62 @@ bot.action('joto', async ctx => {
     }
 })
 
+bot.action('b_payd', async ctx => {
+    try {
+        const text = await Number(ctx.callbackQuery.message.caption.split(' ')[0].replace("#", "")) 
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        const db = await collection.findOne({upid: text})
+        await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADDWQ-qY4O5Hoj5yqeetMdmRlJRS6lAALlxzEbHEH5SaMXvh0VMjcAAQEAAwIAA3kAAy8E',{caption: `💸 Successful payment for the BOOK | GENETICS 🧬! The payment was successfully verified and if you have any questions, you can write here to contact Mr. Zade`})
+        await collection.findOneAndUpdate({upid: text}, {$set: {upid: 'none'}})
+        await ctx.reply('Sended ✅')
+        await ctx.answerCbQuery('Sended ✅')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bot.action('b_payr', async ctx => {
+    try {
+        const text = await Number(ctx.callbackQuery.message.caption.split(' ')[0].replace("#", "")) 
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        const db = await collection.findOne({upid: text})
+        await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADDmQ-qZ_oi1yAplQ_jaQ5DdG4HRSGAALmxzEbHEH5ScB3BtUxoTg2AQADAgADeQADLwQ',{caption: `💸 Payment Failed (BOOK | GENETICS 🧬)! Payment Failed and if you have any questions, you can write here to contact Mr. Zade`})
+        await collection.findOneAndUpdate({upid: text}, {$set: {upid: 'none'}})
+        await ctx.reply('Sended ✅')
+        await ctx.answerCbQuery('Sended ✅')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bot.action('c_payd', async ctx => {
+    try {
+        const text = await Number(ctx.callbackQuery.message.caption.split(' ')[0].replace("#", "")) 
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        const db = await collection.findOne({upid: text})
+        await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADDWQ-qY4O5Hoj5yqeetMdmRlJRS6lAALlxzEbHEH5SaMXvh0VMjcAAQEAAwIAA3kAAy8E',{caption: `💸 Successful payment for the COURSE | ZADE'S SCHOOL 📚! The payment was successfully verified and if you have any questions, you can write here to contact Mr. Zade`})
+        await collection.findOneAndUpdate({upid: text}, {$set: {upid: 'none'}})
+        await ctx.reply('Sended ✅')
+        await ctx.answerCbQuery('Sended ✅')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bot.action('c_payr', async ctx => {
+    try {
+        const text = await Number(ctx.callbackQuery.message.caption.split(' ')[0].replace("#", "")) 
+        await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
+        const db = await collection.findOne({upid: text})
+        await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADDmQ-qZ_oi1yAplQ_jaQ5DdG4HRSGAALmxzEbHEH5ScB3BtUxoTg2AQADAgADeQADLwQ',{caption: `💸 Payment Failed (COURSE | ZADE'S SCHOOL 📚)! Payment Failed and if you have any questions, you can write here to contact Mr. Zade`})
+        await collection.findOneAndUpdate({upid: text}, {$set: {upid: 'none'}})
+        await ctx.reply('Sended ✅')
+        await ctx.answerCbQuery('Sended ✅')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
 bot.command('stats', async ctx => {
     try {
         const ingrf = await collection.findOne({fgroup: ctx.from.id})
@@ -395,20 +794,20 @@ bot.command('stats', async ctx => {
         if(ingrf != null || ingrs != null) {
             const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
             if(db.fgs == db.sgs) {
-                await ctx.replyWithPhoto({source: './grootss.jpg'}, {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML'})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCGQ-cOYg0kub2xQzHm3FvGCKuJEfAALZyTEbHEHxSSvh7332j-BtAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML'})
             }else if(db.fgs > db.sgs) {
-                await ctx.replyWithPhoto({source: './grootfl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML'})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCWQ-cPjRjc6eiHH9GU_bylF5fvrWAALayTEbHEHxSd_wm56U3Sx6AQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML'})
             }else {
-                await ctx.replyWithPhoto({source: './groottl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML'})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADB2Q-cNk3YWLnmqrUnKzr-b_p_-m1AALYyTEbHEHxSV1mAqojrxjuAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML'})
             }
         }else if(ctx.from.id == 1334751749) {
             const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
             if(db.fgs == db.sgs) {
-                await ctx.replyWithPhoto({source: './grootss.jpg'}, {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCGQ-cOYg0kub2xQzHm3FvGCKuJEfAALZyTEbHEHxSSvh7332j-BtAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
             }else if(db.fgs > db.sgs) {
-                await ctx.replyWithPhoto({source: './grootfl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCWQ-cPjRjc6eiHH9GU_bylF5fvrWAALayTEbHEHxSd_wm56U3Sx6AQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
             }else {
-                await ctx.replyWithPhoto({source: './groottl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADB2Q-cNk3YWLnmqrUnKzr-b_p_-m1AALYyTEbHEHxSV1mAqojrxjuAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
             }
         }else {
             await ctx.reply('This command can only be used by ZADE school students ⚠️')
@@ -426,20 +825,20 @@ bot.hears(['STATS 📊'], async ctx => {
         if(ingrf != null || ingrs != null) {
             const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
             if(db.fgs == db.sgs) {
-                await ctx.replyWithPhoto({source: './grootss.jpg'}, {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML'})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCGQ-cOYg0kub2xQzHm3FvGCKuJEfAALZyTEbHEHxSSvh7332j-BtAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML'})
             }else if(db.fgs > db.sgs) {
-                await ctx.replyWithPhoto({source: './grootfl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML'})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCWQ-cPjRjc6eiHH9GU_bylF5fvrWAALayTEbHEHxSd_wm56U3Sx6AQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML'})
             }else {
-                await ctx.replyWithPhoto({source: './groottl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML'})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADB2Q-cNk3YWLnmqrUnKzr-b_p_-m1AALYyTEbHEHxSV1mAqojrxjuAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML'})
             }
         }else if(ctx.from.id == 1334751749) {
             const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
             if(db.fgs == db.sgs) {
-                await ctx.replyWithPhoto({source: './grootss.jpg'}, {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCGQ-cOYg0kub2xQzHm3FvGCKuJEfAALZyTEbHEHxSSvh7332j-BtAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
             }else if(db.fgs > db.sgs) {
-                await ctx.replyWithPhoto({source: './grootfl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCWQ-cPjRjc6eiHH9GU_bylF5fvrWAALayTEbHEHxSd_wm56U3Sx6AQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
             }else {
-                await ctx.replyWithPhoto({source: './groottl.jpg'}, {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADB2Q-cNk3YWLnmqrUnKzr-b_p_-m1AALYyTEbHEHxSV1mAqojrxjuAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
             }
         }else {
             await ctx.reply('This command can only be used by ZADE school students ⚠️')
@@ -490,6 +889,8 @@ bot.on('new_chat_members', async ctx => {
         await ctx.tg.deleteMessage(ctx.update.message.from.id, db.deljreq)
         await ctx.reply(`${db.realname} joined the chat`)
         await ctx.tg.sendMessage(db.user_id, 'You have successfully joined the chat ✅')
+        // const adb = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+        // if (adb.otochat.length == 2) return await collection.findOneAndUpdate({user_id: ctx.update.message.from.id}, {$set: {inchat: Math.floor(Date.now() / 1000)}})
     } catch (e) {
         console.error(e);
     }
@@ -502,10 +903,40 @@ bot.on('left_chat_member', async ctx => {
         await collection.findOneAndUpdate({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')}, {$pull: {otochat: ctx.update.message.from.id}})
         const db = await collection.findOne({user_id: ctx.update.message.from.id})
         await ctx.reply(`${db.realname} left the chat`)
+        const adb = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+        if (adb.otochat.length == 1) {
+            for (let i = 0; i < adb.otochat.length; i++) {
+                try {
+                    var seconds = await Math.floor(Date. now() / 1000) + 1;
+                    await collection.findOneAndUpdate({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')}, {$pull: {otochat: adb.otochat[i]}, $set: {inchat: 0}})
+                    await collection.findOneAndUpdate({user_id: adb.otochat[i]}, {$set: {joined: false}})
+                    await ctx.tg.kickChatMember(-1001945378010, adb.otochat[i], seconds)
+                    await ctx.tg.sendMessage(adb.otochat[i], 'The conversation ended because one of the participants left the chat 🏁')
+                } catch (e) {
+                   console.error(e); 
+                }
+            }
+        }
     } catch (e) {
         console.error(e);
     }
 })
+
+bot.on('channel_post', async ctx => {
+    console.log(ctx.channelPost);
+})
+
+// setTimeout(async () => {
+//     const adb = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+//     if(adb.inchat != 0) {
+//         const time = await Math.floor(Date.now() / 1000);
+//         const tcalc = time - adb.inchat;
+//         if(tcalc >= 1200) {
+//             await bot.telegram.sendMessage(-1001945378010, 'Attention! It\'s been 20 minutes since the chat started, if you think your conversation has come to an end, I\'ll give you 2 buttons to choose from to let others join the chat who want to discuss anything:', {reply_markup: {inline_keyboard: [[Markup.button.callback('')]]}})
+//         }
+//     }
+// }, 3000);
+
 
 // 1334751749
 bot.on('message', async ctx => {

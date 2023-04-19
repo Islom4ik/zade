@@ -5,6 +5,7 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const { DateTime } = require('luxon');
 const { enter, leave } = Scenes.Stage;
 
+
 const nameget = new Scenes.BaseScene("nameget");
 
 nameget.enter(async ctx => {
@@ -47,7 +48,7 @@ const news = new Scenes.BaseScene("news");
 
 news.enter(async ctx => {
     try {
-        await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADA2Q-cDnND2ZOpLePAw3JRoeRMxbGAALSyTEbHEHxSdaLf-9e-BlXAQADAgADeQADLwQ', {caption: 'Ok... Send me any message:', reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
+        await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADH2RABkQt6cCAviwTkzy9_zFM2xo8AALSyTEbHEHxSWulnc6dYshXAQADAgADeQADLwQ', {caption: 'Ok... Send me any message:', reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
     } catch (e) {
         console.error(e);
     }
@@ -101,7 +102,7 @@ const groupanalyse = new Scenes.BaseScene("groupanalyse");
 
 groupanalyse.enter(async ctx => {
     try {
-        await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADBWQ-cKDjYx0O85XHaq5-bFHZei6rAALWyTEbHEHxSalM85cN5J0QAQADAgADeAADLwQ', {caption: 'Choose your group:', reply_markup: {inline_keyboard: [[Markup.button.callback('Groots 🌴', 'g1'), Markup.button.callback('Groots 🌴🌴', 'g2')], [Markup.button.callback('Cancel ⛔️', 'cancgr')]]}})
+        await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADHWRABiPCxUBmOx5Lgb9txPwMvKyrAALWyTEbHEHxSfu1QJ-QIw5fAQADAgADeAADLwQ', {caption: 'Choose your group:', reply_markup: {inline_keyboard: [[Markup.button.callback('Groots 🌴', 'g1'), Markup.button.callback('Groots 🌴🌴', 'g2')], [Markup.button.callback('Cancel ⛔️', 'cancgr')]]}})
     } catch (e) {
         console.error(e);
     }
@@ -331,7 +332,7 @@ bookord.enter(async ctx => {
                 await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: 0}})
             }
         }
-        const cardph = await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADBmQ-cMMAAUji3w68l66Of9w13ZirdwAC18kxGxxB8UkUoG7eWQIYSQEAAwIAA3kAAy8E', {parse_mode: 'MarkdownV2', caption: '`8600490456114966`', reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
+        const cardph = await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADHGRABg0v3F36r7EgInSWO169e7CrAALXyTEbHEHxSdVGe1c-Rhd2AQADAgADeQADLwQ', {parse_mode: 'MarkdownV2', caption: '`8600490456114966`', reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
         const awaiting = await ctx.reply('👨🏻‍💻 Pay 100,000 sum to the card above and send screenshot of payment receipt:')
         await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {b_trash: [cardph.message_id, awaiting.message_id]}})
     } catch (e) {
@@ -395,7 +396,7 @@ coursepay.enter(async ctx => {
                 await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: 0}})
             }
         }
-        const cardph = await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADBmQ-cMMAAUji3w68l66Of9w13ZirdwAC18kxGxxB8UkUoG7eWQIYSQEAAwIAA3kAAy8E', {parse_mode: 'MarkdownV2', caption: '`8600490456114966`', reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
+        const cardph = await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADHGRABg0v3F36r7EgInSWO169e7CrAALXyTEbHEHxSdVGe1c-Rhd2AQADAgADeQADLwQ', {parse_mode: 'MarkdownV2', caption: '`8600490456114966`', reply_markup: {keyboard: [['Cancel 🔴']], resize_keyboard: true}})
         const awaiting = await ctx.reply('👨🏻‍💻 Pay 2,000,000 sum to the card above and send screenshot of payment receipt:')
         await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {b_trash: [cardph.message_id, awaiting.message_id]}})
     } catch (e) {
@@ -479,7 +480,7 @@ const pointofp = new Scenes.BaseScene("pointofp");
 
 pointofp.enter(async ctx => {
     try {
-        return await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADBGQ-cJGzN39U5pLG_MTh5tftezhbAALVyTEbHEHxSQ7xS0jLQv_mAQADAgADeQADLwQ', {caption: '👨🏻‍💻 What the point of the payment?', reply_markup: {keyboard: [['PAY FOR THE BOOK 🧬'], ['PAY FOR THE COURSE 📚'], ['Cancel 🔴']], resize_keyboard: true}})
+        return await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADHmRABjbj1XeC7eFpPwHmbzoJVhvQAALVyTEbHEHxSQRUibhWCIp-AQADAgADeQADLwQ', {caption: '👨🏻‍💻 What the point of the payment?', reply_markup: {keyboard: [['PAY FOR THE BOOK 🧬'], ['PAY FOR THE COURSE 📚'], ['Cancel 🔴']], resize_keyboard: true}})
     } catch (e) {
         console.error(e);
     }
@@ -514,14 +515,14 @@ pointofp.on('text', async ctx => {
                     if(e.response.error_code == 400 || e.on.payload.message_thread_id == undefined) {
                         await ctx.reply('😡 So why did you have to remove it? Okay, I\'m kind, here\'s a new one for you:')
                         setTimeout(async () => {
-                            const cmeid = await ctx.sendVideo('CgACAgIAAx0Ccqjl3gADEWQ_5XSwpvTx3CPaLCdqOzt3zMVDAAJUJwACtt8BSp2cjuwazs53LwQ', {caption: 'ZADE\'S SCHOOL 📚 BIO|CHEM COURSE\n\n<b>The monthly fee for the course is 2,000,000 sum</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('PAY FOR THE COURSE  📚', 'c_pay')]], remove_keyboard: true}})
+                            const cmeid = await ctx.sendVideo('CgACAgIAAx0Ccqjl3gADFWRABMbGz2zTjm-0dwGjbE9ln5q_AAJUJwACtt8BSon-oFw6SWNYLwQ', {caption: 'ZADE\'S SCHOOL 📚 BIO|CHEM COURSE\n\n<b>The monthly fee for the course is 2,000,000 sum</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('PAY FOR THE COURSE  📚', 'c_pay')]], remove_keyboard: true}})
                             return await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: cmeid.message_id}})
                         }, 1500);
                     }
                 }
                 return
             }
-            const cmeid = await ctx.sendVideo('CgACAgIAAx0Ccqjl3gADEWQ_5XSwpvTx3CPaLCdqOzt3zMVDAAJUJwACtt8BSp2cjuwazs53LwQ', {caption: 'ZADE\'S SCHOOL 📚 BIO|CHEM COURSE\n\n<b>The monthly fee for the course is 2,000,000 sum</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('PAY FOR THE COURSE  📚', 'c_pay')]], remove_keyboard: true}})
+            const cmeid = await ctx.sendVideo('CgACAgIAAx0Ccqjl3gADFWRABMbGz2zTjm-0dwGjbE9ln5q_AAJUJwACtt8BSon-oFw6SWNYLwQ', {caption: 'ZADE\'S SCHOOL 📚 BIO|CHEM COURSE\n\n<b>The monthly fee for the course is 2,000,000 sum</b>', parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('PAY FOR THE COURSE  📚', 'c_pay')]], remove_keyboard: true}})
             return await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: cmeid.message_id}})
         }else if(ctx.message.text == 'Cancel 🔴') {
             const db = await collection.findOne({user_id: ctx.from.id})
@@ -636,7 +637,7 @@ bot.command('update', async ctx => {
 //         if (user == null) return await ctx.scene.enter('nameget');
 //         if(user.joined == true) return await ctx.reply('You have already joined the group')
 //         const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
-//         const deljreq = await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCmQ-cQYZYd57lLRAeZl-8vf05mzSAALbyTEbHEHxSWhDHAiuSqYeAQADAgADeQADLwQ', {caption: '👨🏻‍💻 Chats are designed to call any student of ZADE\'s school who wants to help with a problem at any time and discuss any other topic.\n\nSelect the chat you want to join:', reply_markup: {inline_keyboard: [[Markup.button.callback(`Chat 1 X 1 [${db.otochat.length}/2]`, 'joto')]]}})
+//         const deljreq = await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADGGRABXYFvAUF7w9Cq_NQiAS8OVJKAALbyTEbHEHxSdM9sx4JSH8TAQADAgADeQADLwQ', {caption: '👨🏻‍💻 Chats are designed to call any student of ZADE\'s school who wants to help with a problem at any time and discuss any other topic.\n\nSelect the chat you want to join:', reply_markup: {inline_keyboard: [[Markup.button.callback(`Chat 1 X 1 [${db.otochat.length}/2]`, 'joto')]]}})
 //         await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {deljreq: deljreq.message_id}})
 //     } catch (e) {
 //         console.error(e);
@@ -664,7 +665,7 @@ bot.command('pay', async ctx => {
             }else if(!db.upid) {
                 await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {upid: 'none'}})
             }
-            await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADBGQ-cJGzN39U5pLG_MTh5tftezhbAALVyTEbHEHxSQ7xS0jLQv_mAQADAgADeQADLwQ', {reply_markup: {inline_keyboard: [[Markup.button.callback('GET STARTED 💳', 'proce')]]}})
+            await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADHmRABjbj1XeC7eFpPwHmbzoJVhvQAALVyTEbHEHxSQRUibhWCIp-AQADAgADeQADLwQ', {reply_markup: {inline_keyboard: [[Markup.button.callback('GET STARTED 💳', 'proce')]]}})
         }else {
             await ctx.reply('This command can only be used by ZADE school students ⚠️\nTo begin with, you must pass student verification in order to use this command. For verification - /z_school')
         }
@@ -691,7 +692,7 @@ bot.hears(['PAYMENTS 💳'], async ctx => {
             }else if(!db.upid) {
                 await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {upid: 'none'}})
             }
-            await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADBGQ-cJGzN39U5pLG_MTh5tftezhbAALVyTEbHEHxSQ7xS0jLQv_mAQADAgADeQADLwQ', {reply_markup: {inline_keyboard: [[Markup.button.callback('GET STARTED 💳', 'proce')]]}})
+            await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADHmRABjbj1XeC7eFpPwHmbzoJVhvQAALVyTEbHEHxSQRUibhWCIp-AQADAgADeQADLwQ', {reply_markup: {inline_keyboard: [[Markup.button.callback('GET STARTED 💳', 'proce')]]}})
         }else {
             await ctx.reply('This command can only be used by ZADE school students ⚠️\nTo begin with, you must pass student verification in order to use this command. For verification - /z_school')
         }
@@ -735,7 +736,7 @@ bot.action('b_payd', async ctx => {
         const text = await Number(ctx.callbackQuery.message.caption.split(' ')[0].replace("#", "")) 
         await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
         const db = await collection.findOne({upid: text})
-        await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADDWQ-qY4O5Hoj5yqeetMdmRlJRS6lAALlxzEbHEH5SaMXvh0VMjcAAQEAAwIAA3kAAy8E',{caption: `💸 Successful payment for the BOOK | GENETICS 🧬! The payment was successfully verified and if you have any questions, you can write here to contact Mr. Zade`})
+        await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADF2RABUbBkRL1MVGdEAUnPkhQkhYvAALlxzEbHEH5SeRB81gysZu_AQADAgADeQADLwQ',{caption: `💸 Successful payment for the BOOK | GENETICS 🧬! The payment was successfully verified and if you have any questions, you can write here to contact Mr. Zade`})
         await collection.findOneAndUpdate({upid: text}, {$set: {upid: 'none'}})
         await ctx.reply('Sended ✅')
         await ctx.answerCbQuery('Sended ✅')
@@ -749,7 +750,7 @@ bot.action('b_payr', async ctx => {
         const text = await Number(ctx.callbackQuery.message.caption.split(' ')[0].replace("#", "")) 
         await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
         const db = await collection.findOne({upid: text})
-        await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADDmQ-qZ_oi1yAplQ_jaQ5DdG4HRSGAALmxzEbHEH5ScB3BtUxoTg2AQADAgADeQADLwQ',{caption: `💸 Payment Failed (BOOK | GENETICS 🧬)! Payment Failed and if you have any questions, you can write here to contact Mr. Zade`})
+        await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADFmRABRzfB9adTdZNPRkNXJYdHWrbAALmxzEbHEH5SfYP_i8c5k4fAQADAgADeQADLwQ',{caption: `💸 Payment Failed (BOOK | GENETICS 🧬)! Payment Failed and if you have any questions, you can write here to contact Mr. Zade`})
         await collection.findOneAndUpdate({upid: text}, {$set: {upid: 'none'}})
         await ctx.reply('Sended ✅')
         await ctx.answerCbQuery('Sended ✅')
@@ -763,7 +764,7 @@ bot.action('c_payd', async ctx => {
         const text = await Number(ctx.callbackQuery.message.caption.split(' ')[0].replace("#", "")) 
         await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
         const db = await collection.findOne({upid: text})
-        await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADDWQ-qY4O5Hoj5yqeetMdmRlJRS6lAALlxzEbHEH5SaMXvh0VMjcAAQEAAwIAA3kAAy8E',{caption: `💸 Successful payment for the COURSE | ZADE'S SCHOOL 📚! The payment was successfully verified and if you have any questions, you can write here to contact Mr. Zade`})
+        await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADF2RABUbBkRL1MVGdEAUnPkhQkhYvAALlxzEbHEH5SeRB81gysZu_AQADAgADeQADLwQ',{caption: `💸 Successful payment for the COURSE | ZADE'S SCHOOL 📚! The payment was successfully verified and if you have any questions, you can write here to contact Mr. Zade`})
         await collection.findOneAndUpdate({upid: text}, {$set: {upid: 'none'}})
         await ctx.reply('Sended ✅')
         await ctx.answerCbQuery('Sended ✅')
@@ -777,7 +778,7 @@ bot.action('c_payr', async ctx => {
         const text = await Number(ctx.callbackQuery.message.caption.split(' ')[0].replace("#", "")) 
         await ctx.deleteMessage(ctx.callbackQuery.message.message_id)
         const db = await collection.findOne({upid: text})
-        await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADDmQ-qZ_oi1yAplQ_jaQ5DdG4HRSGAALmxzEbHEH5ScB3BtUxoTg2AQADAgADeQADLwQ',{caption: `💸 Payment Failed (COURSE | ZADE'S SCHOOL 📚)! Payment Failed and if you have any questions, you can write here to contact Mr. Zade`})
+        await ctx.tg.sendPhoto(db.user_id, 'AgACAgIAAx0Ccqjl3gADFmRABRzfB9adTdZNPRkNXJYdHWrbAALmxzEbHEH5SfYP_i8c5k4fAQADAgADeQADLwQ',{caption: `💸 Payment Failed (COURSE | ZADE'S SCHOOL 📚)! Payment Failed and if you have any questions, you can write here to contact Mr. Zade`})
         await collection.findOneAndUpdate({upid: text}, {$set: {upid: 'none'}})
         await ctx.reply('Sended ✅')
         await ctx.answerCbQuery('Sended ✅')
@@ -794,20 +795,20 @@ bot.command('stats', async ctx => {
         if(ingrf != null || ingrs != null) {
             const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
             if(db.fgs == db.sgs) {
-                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCGQ-cOYg0kub2xQzHm3FvGCKuJEfAALZyTEbHEHxSSvh7332j-BtAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML'})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADGmRABbn2qCMGzsSvCoPPcyU1zlXYAALZyTEbHEHxSbUcVchU_Nn0AQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML'})
             }else if(db.fgs > db.sgs) {
-                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCWQ-cPjRjc6eiHH9GU_bylF5fvrWAALayTEbHEHxSd_wm56U3Sx6AQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML'})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADGWRABaahBao18gABSKpV7B6Ck2QmcwAC2skxGxxB8Unn31E8zMDvbQEAAwIAA3gAAy8E', {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML'})
             }else {
-                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADB2Q-cNk3YWLnmqrUnKzr-b_p_-m1AALYyTEbHEHxSV1mAqojrxjuAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML'})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADG2RABcqkahsvcWHoanB5Bsq3Z5E8AALYyTEbHEHxSRwe7c5RerKEAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML'})
             }
         }else if(ctx.from.id == 1334751749) {
             const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
             if(db.fgs == db.sgs) {
-                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCGQ-cOYg0kub2xQzHm3FvGCKuJEfAALZyTEbHEHxSSvh7332j-BtAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADGmRABbn2qCMGzsSvCoPPcyU1zlXYAALZyTEbHEHxSbUcVchU_Nn0AQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
             }else if(db.fgs > db.sgs) {
-                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCWQ-cPjRjc6eiHH9GU_bylF5fvrWAALayTEbHEHxSd_wm56U3Sx6AQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADGWRABaahBao18gABSKpV7B6Ck2QmcwAC2skxGxxB8Unn31E8zMDvbQEAAwIAA3gAAy8E', {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
             }else {
-                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADB2Q-cNk3YWLnmqrUnKzr-b_p_-m1AALYyTEbHEHxSV1mAqojrxjuAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADG2RABcqkahsvcWHoanB5Bsq3Z5E8AALYyTEbHEHxSRwe7c5RerKEAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
             }
         }else {
             await ctx.reply('This command can only be used by ZADE school students ⚠️')
@@ -825,20 +826,20 @@ bot.hears(['STATS 📊'], async ctx => {
         if(ingrf != null || ingrs != null) {
             const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
             if(db.fgs == db.sgs) {
-                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCGQ-cOYg0kub2xQzHm3FvGCKuJEfAALZyTEbHEHxSSvh7332j-BtAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML'})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADGmRABbn2qCMGzsSvCoPPcyU1zlXYAALZyTEbHEHxSbUcVchU_Nn0AQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML'})
             }else if(db.fgs > db.sgs) {
-                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCWQ-cPjRjc6eiHH9GU_bylF5fvrWAALayTEbHEHxSd_wm56U3Sx6AQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML'})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADGWRABaahBao18gABSKpV7B6Ck2QmcwAC2skxGxxB8Unn31E8zMDvbQEAAwIAA3gAAy8E', {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML'})
             }else {
-                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADB2Q-cNk3YWLnmqrUnKzr-b_p_-m1AALYyTEbHEHxSV1mAqojrxjuAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML'})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADG2RABcqkahsvcWHoanB5Bsq3Z5E8AALYyTEbHEHxSRwe7c5RerKEAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML'})
             }
         }else if(ctx.from.id == 1334751749) {
             const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
             if(db.fgs == db.sgs) {
-                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCGQ-cOYg0kub2xQzHm3FvGCKuJEfAALZyTEbHEHxSSvh7332j-BtAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADGmRABbn2qCMGzsSvCoPPcyU1zlXYAALZyTEbHEHxSbUcVchU_Nn0AQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> On the same level\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
             }else if(db.fgs > db.sgs) {
-                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADCWQ-cPjRjc6eiHH9GU_bylF5fvrWAALayTEbHEHxSd_wm56U3Sx6AQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADGWRABaahBao18gABSKpV7B6Ck2QmcwAC2skxGxxB8Unn31E8zMDvbQEAAwIAA3gAAy8E', {caption: `🏆 <b>Leading:</b> GOOTS 🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.fgs - db.sgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
             }else {
-                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADB2Q-cNk3YWLnmqrUnKzr-b_p_-m1AALYyTEbHEHxSV1mAqojrxjuAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
+                await ctx.replyWithPhoto('AgACAgIAAx0Ccqjl3gADG2RABcqkahsvcWHoanB5Bsq3Z5E8AALYyTEbHEHxSRwe7c5RerKEAQADAgADeAADLwQ', {caption: `🏆 <b>Leading:</b> GOOTS 🌴🌴\n\n<b>GROOTSI score:</b> <i>${db.fgs}</i> points\n<b>GROOTSII score:</b> <i>${db.sgs}</i> points\n\n<b>${db.sgs - db.fgs} point(s) difference</b>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('Edit scores 📝', 'esc')]]}})
             }
         }else {
             await ctx.reply('This command can only be used by ZADE school students ⚠️')
@@ -922,9 +923,14 @@ bot.on('left_chat_member', async ctx => {
     }
 })
 
-bot.on('channel_post', async ctx => {
-    console.log(ctx.channelPost);
-})
+// bot.on('channel_post', async ctx => {
+//     console.log(ctx.channelPost);
+// })
+
+
+// bot.on('forward_date', async ctx => {
+//     console.log(ctx.update);
+// })
 
 // setTimeout(async () => {
 //     const adb = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})

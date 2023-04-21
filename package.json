@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "bruteforcer": "^1.0.1",
     "dotenv": "^16.0.3",
     "luxon": "^3.2.1",
     "mongodb": "^5.0.1",

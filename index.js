@@ -4,6 +4,7 @@ require('dotenv').config();
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const { DateTime } = require('luxon');
 const { enter, leave } = Scenes.Stage;
+const Bruteforcer = require('bruteforcer');
 
 
 const nameget = new Scenes.BaseScene("nameget");
@@ -57,7 +58,7 @@ news.enter(async ctx => {
 news.on('message', async ctx => {
     try {
         if(ctx.message.text == 'Cancel 🔴') {
-            await ctx.reply('Canceled ✅', {reply_markup: {remove_keyboard: true}})
+            await ctx.reply('Canceled ✅', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GENOTYPE COMBINATOR 🧬']], resize_keyboard: true}})
             return await ctx.scene.leave('news')
         }
         await ctx.reply('Working on it...', {reply_markup: {remove_keyboard: true}})
@@ -91,7 +92,7 @@ news.action('newssend', async ctx => {
                 console.error(e);
             }
         }
-        await ctx.reply('Sending completed ✅')
+        await ctx.reply('Sending completed ✅', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GENOTYPE COMBINATOR 🧬']], resize_keyboard: true}})
         await ctx.scene.leave('news')
     } catch (e) {
         console.error(e);
@@ -343,7 +344,7 @@ bookord.enter(async ctx => {
 bookord.on('text', async ctx => {
     try {
         if(ctx.message.text == 'Cancel 🔴') {
-            await ctx.reply('Canceled ✅', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']],resize_keyboard: true}})
+            await ctx.reply('Canceled ✅', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GENOTYPE COMBINATOR 🧬']],resize_keyboard: true}})
             return ctx.scene.leave('bookord')
         }
         await ctx.reply('👨🏻‍💻 Please send a screenshot of the payment:')
@@ -368,7 +369,7 @@ bookord.on('photo', async ctx => {
         await ctx.tg.sendPhoto(1334751749, ctx.message.photo.pop().file_id, {caption: `#${rs} New payment for a book | GENETICS 🧬:\n\n<b>Real Name:</b> <a href="tg://user?id=${db.user_id}">${db.realname}</a>\n<b>User Name:</b> <i>@${db.username}</i>\n<b>TG Account Name:</b> <i>${db.accfirstname}</i>\n<b>User ID:</b> <i>${db.user_id}</i>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('DONE ✅', 'b_payd')], [Markup.button.callback('REJECT ❌', 'b_payr')]]}})
         await collection.findOneAndUpdate({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')}, {$set: {payids: rs}})
         await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {upid: rs}})
-        await ctx.reply('💸 Payment sent for review, please wait for a response...', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']],resize_keyboard: true}})
+        await ctx.reply('💸 Payment sent for review, please wait for a response...', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GENOTYPE COMBINATOR 🧬']],resize_keyboard: true}})
         await ctx.scene.leave('bookord')
     } catch (e) {
         console.error(e);
@@ -407,7 +408,7 @@ coursepay.enter(async ctx => {
 coursepay.on('text', async ctx => {
     try {
         if(ctx.message.text == 'Cancel 🔴') {
-            await ctx.reply('Canceled ✅', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']],resize_keyboard: true}})
+            await ctx.reply('Canceled ✅', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GENOTYPE COMBINATOR 🧬']],resize_keyboard: true}})
             return ctx.scene.leave('coursepay')
         }
         await ctx.reply('👨🏻‍💻 Please send a screenshot of the payment:')
@@ -432,7 +433,7 @@ coursepay.on('photo', async ctx => {
         await ctx.tg.sendPhoto(1334751749, ctx.message.photo.pop().file_id, {caption: `#${rs} New payment for a course | ZADE'S SCHOOL 📚:\n\n<b>Real Name:</b> <a href="tg://user?id=${db.user_id}">${db.realname}</a>\n<b>User Name:</b> <i>@${db.username}</i>\n<b>TG Account Name:</b> <i>${db.accfirstname}</i>\n<b>User ID:</b> <i>${db.user_id}</i>`, parse_mode: 'HTML', reply_markup: {inline_keyboard: [[Markup.button.callback('DONE ✅', 'c_payd')], [Markup.button.callback('REJECT ❌', 'c_payr')]]}})
         await collection.findOneAndUpdate({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')}, {$set: {cpayids: rs}})
         await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {upid: rs}})
-        await ctx.reply('💸 Payment sent for review, please wait for a response...', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']],resize_keyboard: true}})
+        await ctx.reply('💸 Payment sent for review, please wait for a response...', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GENOTYPE COMBINATOR 🧬']],resize_keyboard: true}})
         await ctx.scene.leave('coursepay')
     } catch (e) {
         console.error(e);
@@ -542,7 +543,7 @@ pointofp.on('text', async ctx => {
                     await collection.findOneAndUpdate({user_id: ctx.from.id}, {$set: {cmesid: 0}})
                 }
             }
-            await ctx.reply('Canceled ✅', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']],resize_keyboard: true}})
+            await ctx.reply('Canceled ✅', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GENOTYPE COMBINATOR 🧬']],resize_keyboard: true}})
             return await ctx.scene.leave('pointofp')
         }else {
             await ctx.reply('Click on one of the buttons above the keyboard ⬇️')
@@ -578,7 +579,59 @@ pointofp.action('c_pay', async ctx => {
     }
 })
 
-const stage = new Scenes.Stage([nameget, news, groupanalyse, gfgp, gsgp, gfedp, gsedp, bookord, coursepay, namefpay, pointofp]);  
+const bfg = new Scenes.BaseScene("bfg");
+
+bfg.enter(async ctx => {
+    try {
+        return await ctx.reply('👨🏻‍💻 Enter sequence (AaBBCCDd):', {reply_markup: {keyboard: [['EXIT BRUTEFORCER 🔴']],resize_keyboard: true}})
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+function generateGametes(genotype) {
+    const gametes = [''];
+    for (let i = 0; i < genotype.length; i += 2) {
+      const allele1 = genotype[i];
+      const allele2 = genotype[i + 1];
+      const newGametes = [];
+      for (const gamete of gametes) {
+        for (const newAllele of [allele1, allele2]) {
+          newGametes.push(gamete + newAllele);
+        }
+      }
+      gametes.splice(0, gametes.length, ...newGametes);
+    }
+    return gametes;
+}
+
+bfg.on('text', async ctx => {
+    try {
+        if(ctx.message.text == 'EXIT BRUTEFORCER 🔴') {
+            await ctx.reply('Done ✅', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GENOTYPE COMBINATOR 🧬']], resize_keyboard: true}})
+            return ctx.scene.leave('bfg')
+        }
+        const searchString = /[\!\#\_\№\"\;\$\%\^\:\&\?\*\(\)\{\}\[\]\?\/\,.\\\|\/\+\=\d]+/g;
+        if (ctx.message.text.match(searchString)) return await ctx.reply('👨🏻‍💻 Please enter sequence (AaBBCCDd):');
+        if (ctx.message.text.split('').length % 2 != 0 ) return await ctx.reply('👨🏻‍💻 You entered the wrong sequence! Please enter sequence (AaBBCCDd):')
+        await ctx.reply('Calculating...', {reply_markup: {remove_keyboard: true}})
+        const genotype = await ctx.message.text;
+        const gametes = await generateGametes(genotype);
+        const q = gametes;
+        const newSet = await new Set(q);
+        const uniqueq = await Array.from(newSet);
+        let rs = []
+        for (let i = 0; i < uniqueq.length; i++) {
+            rs.push(`🧬 ${i+1}:  ${uniqueq[i]}`)
+        }
+        await ctx.reply(`📋 Here are all the possible gametes that can be obtained from: <i>${ctx.message.text}</i>\n\n${rs.join('\n\n')}`, {parse_mode: 'HTML'})
+        await ctx.scene.enter('bfg')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+const stage = new Scenes.Stage([nameget, news, groupanalyse, gfgp, gsgp, gfedp, gsedp, bookord, coursepay, namefpay, pointofp, bfg]);  
 bot.use(session());
 bot.use(stage.middleware());  
 
@@ -621,12 +674,12 @@ bot.command('update', async ctx => {
         if(ctx.from.id != 5103314362) return await ctx.reply('🔒')
         const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
         for (let i = 0; i < db.fgroup.length; i++) {
-            await ctx.tg.sendMessage(db.fgroup[i], 'New update ⬆️\n\n- Improved script reading speed 📶\n- Payment menu for the course and purchase of the book GENETICS 🧬\n- A database for bot files has been created, if you are interested, here is the <a href="https://t.me/+Zle_ffKNuro2NDhi">channel</a> 🛢', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
+            await ctx.tg.sendMessage(db.fgroup[i], 'New update ⬆️\n\n- Combinator for obtaining valid gametes from the given genotypes - command: /z_combinator or by pressing the button above the keyboard: GENOTYPE COMBINATOR 🧬', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GENOTYPE COMBINATOR 🧬']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
         }
         for (let i = 0; i < db.sgroup.length; i++) {
-            await ctx.tg.sendMessage(db.sgroup[i], 'New update ⬆️\n\n- Improved script reading speed 📶\n- Payment menu for the course and purchase of the book GENETICS 🧬\n- A database for bot files has been created, if you are interested, here is the <a href="https://t.me/+Zle_ffKNuro2NDhi">channel</a> 🛢', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
+            await ctx.tg.sendMessage(db.sgroup[i], 'New update ⬆️\n\n- Combinator for obtaining valid gametes from the given genotypes - command: /z_combinator or by pressing the button above the keyboard: GENOTYPE COMBINATOR 🧬', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GENOTYPE COMBINATOR 🧬']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
         }
-        await ctx.tg.sendMessage(1334751749, 'New update ⬆️\n\n- Improved script reading speed 📶\n- Payment menu for the course and purchase of the book GENETICS 🧬\n- A database for bot files has been created, if you are interested, here is the <a href="https://t.me/+Zle_ffKNuro2NDhi">channel</a> 🛢', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
+        await ctx.tg.sendMessage(1334751749, 'New update ⬆️\n\n- Combinator for obtaining valid gametes from the given genotypes - command: /z_combinator or by pressing the button above the keyboard: GENOTYPE COMBINATOR 🧬', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GENOTYPE COMBINATOR 🧬']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
     } catch (e) {
         console.error(e);
     }
@@ -849,6 +902,23 @@ bot.hears(['STATS 📊'], async ctx => {
         console.error(e);
     }
 })
+
+bot.command('z_combinator', async ctx => {
+    try {
+        await ctx.scene.enter('bfg')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bot.hears(['GENOTYPE COMBINATOR 🧬'], async ctx => {
+    try {
+        await ctx.scene.enter('bfg')
+    } catch (e) {
+        console.error(e);
+    }
+})
+
 
 bot.action('esc', async ctx => {
     try {

@@ -611,6 +611,7 @@ bfg.on('text', async ctx => {
             await ctx.reply('Done ✅', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GETTING GAMETES 🧬']], resize_keyboard: true}})
             return ctx.scene.leave('bfg')
         }
+        const tstart = (new Date()).getTime();
         const searchString = /[\!\#\_\№\"\;\$\%\^\:\&\?\*\(\)\{\}\[\]\?\/\,.\\\|\/\+\=\d]+/g;
         if (ctx.message.text.match(searchString)) return await ctx.reply('👨🏻‍💻 Please enter sequence (AaBBCCDd):');
         if (ctx.message.text.split('').length % 2 != 0 ) return await ctx.reply('👨🏻‍💻 You entered the wrong sequence! Please enter sequence (AaBBCCDd):')
@@ -624,10 +625,21 @@ bfg.on('text', async ctx => {
         for (let i = 0; i < uniqueq.length; i++) {
             rs.push(`🧬 ${i+1}:  ${uniqueq[i]}`)
         }
-        await ctx.reply(`📋 Here are all the possible gametes that can be obtained from: <i>${ctx.message.text}</i>\n\n${rs.join('\n\n')}`, {parse_mode: 'HTML'})
+        const tstop = (new Date()).getTime();
+        await ctx.reply(`📋 Here are all the possible gametes that can be obtained from: <i>${ctx.message.text}</i>\n\n${rs.join('\n\n')}\n\nTime taken: <b>${tstop - tstart}</b> ms`, {parse_mode: 'HTML'})
         await ctx.scene.enter('bfg')
     } catch (e) {
-        console.error(e);
+        if(e.response.description == 'Bad Request: message is too long' || e.response.description == 'Request Entity Too Large') {
+            console.error(e);
+            let tl = e.on.payload.text.split('\n').length
+            await ctx.reply(`⚠️ The text is too large and I can't send it to you, because the number of all lines is: ${tl}`, {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GETTING GAMETES 🧬']],resize_keyboard: true}})
+            tl = 0
+            return ctx.scene.leave('bfg')
+        }else {
+            console.error(e);
+            await ctx.reply('Произошла ошибка ⚠️', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GETTING GAMETES 🧬']],resize_keyboard: true}})
+            return ctx.scene.leave('bfg')
+        }
     }
 })
 
@@ -903,9 +915,44 @@ bot.hears(['STATS 📊'], async ctx => {
     }
 })
 
+bot.command('z_gactivate', async ctx => {
+    try {
+        if(ctx.from.id == 1334751749 || ctx.from.id == 5103314362) {
+            const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+            if(db.gactive == false) {
+                await ctx.reply('GETTING GAMETES 🛑', {reply_markup: {inline_keyboard: [[Markup.button.callback('Disabled 🛑', 'gdi')]]}})
+            }else {
+                await ctx.reply('GETTING GAMETES 🟢', {reply_markup: {inline_keyboard: [[Markup.button.callback('Available 🟢', 'gdi')]]}})
+            }
+        }else {
+            await ctx.reply('🔒')
+        }
+    } catch (e) {
+        console.error(e);
+    }
+})
+
+bot.action('gdi', async ctx => {
+    try {
+        const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+        if(db.gactive == false) {
+            await ctx.editMessageText('GETTING GAMETES 🟢', {reply_markup: {inline_keyboard: [[Markup.button.callback('Available 🟢', 'gdi')]]}})
+            await collection.findOneAndUpdate({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')}, {$set: {gactive: true}})
+            return await ctx.answerCbQuery()
+        }else {
+            await ctx.editMessageText('GETTING GAMETES 🛑', {reply_markup: {inline_keyboard: [[Markup.button.callback('Disabled 🛑', 'gdi')]]}})
+            await collection.findOneAndUpdate({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')}, {$set: {gactive: false}})
+            return await ctx.answerCbQuery()
+        }
+    } catch (e) {
+        console.error(e);
+    }
+})
+
 bot.command('z_ggametes', async ctx => {
     try {
-        return await ctx.reply('Wait until this feature will be available soon!')
+        const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+        if(db.gactive == false) return await ctx.reply('Wait until this feature will be available soon!')
         await ctx.scene.enter('bfg')
     } catch (e) {
         console.error(e);
@@ -914,7 +961,8 @@ bot.command('z_ggametes', async ctx => {
 
 bot.hears(['GETTING GAMETES 🧬'], async ctx => {
     try {
-        return await ctx.reply('Wait until this feature will be available soon!')
+        const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
+        if(db.gactive == false) return await ctx.reply('Wait until this feature will be available soon!')
         await ctx.scene.enter('bfg')
     } catch (e) {
         console.error(e);

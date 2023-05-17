@@ -1085,6 +1085,8 @@ bot.on('message', async ctx => {
             return
         }
 
+        if(ctx.message.via_bot) return
+
         if (ctx.from.id == 1334751749) {
             if(ctx.message.reply_to_message){
                 if (ctx.message.voice) {

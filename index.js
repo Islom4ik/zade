@@ -646,6 +646,8 @@ const stage = new Scenes.Stage([nameget, news, groupanalyse, gfgp, gsgp, gfedp, 
 bot.use(session());
 bot.use(stage.middleware());  
 
+bot.telegram.setWebhook(process.env.DOMEN, {max_connections: 50});
+
 bot.start(async (ctx) => {
     try {
         let usindb = await collection.findOne({users: ctx.from.id})
@@ -684,13 +686,16 @@ bot.command('update', async ctx => {
     try {
         if(ctx.from.id != 5103314362) return await ctx.reply('🔒')
         const db = await collection.findOne({_id: new ObjectId('63ee6970d8baf2c27a1dd95a')})
-        for (let i = 0; i < db.fgroup.length; i++) {
-            await ctx.tg.sendMessage(db.fgroup[i], 'Correction 🔧\n\n- Combinator for obtaining valid gametes from the given genotypes - command: /z_ggametes or by pressing the button above the keyboard: GETTING GAMETES 🧬', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GETTING GAMETES 🧬']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
+        for (let i = 0; i < db.users.length; i++) {
+            await ctx.tg.sendPhoto(db.users[i], {source: './upd.jpg'}, {caption: 'New bot improvements ⬆️\n- Response speed increased\n- Cooperation with the telegram server (webhooks)\n\nSoon: Big update\n- Sending any messages to Mr.Zade\n- Reporting option: "Write to developer"\n- WEB SITE\n- INLINE CHAT-GPT'})
         }
-        for (let i = 0; i < db.sgroup.length; i++) {
-            await ctx.tg.sendMessage(db.sgroup[i], 'New update ⬆️\n\n- Combinator for obtaining valid gametes from the given genotypes - command: /z_ggametes or by pressing the button above the keyboard: GETTING GAMETES 🧬', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GETTING GAMETES 🧬']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
-        }
-        await ctx.tg.sendMessage(1334751749, 'New update ⬆️\n\n- Combinator for obtaining valid gametes from the given genotypes - command: /z_ggametes or by pressing the button above the keyboard: GETTING GAMETES 🧬', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GETTING GAMETES 🧬']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
+        // for (let i = 0; i < db.fgroup.length; i++) {
+        //     await ctx.tg.sendMessage(db.fgroup[i], 'Correction 🔧\n\n- Combinator for obtaining valid gametes from the given genotypes - command: /z_ggametes or by pressing the button above the keyboard: GETTING GAMETES 🧬', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GETTING GAMETES 🧬']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
+        // }
+        // for (let i = 0; i < db.sgroup.length; i++) {
+        //     await ctx.tg.sendMessage(db.sgroup[i], 'New update ⬆️\n\n- Combinator for obtaining valid gametes from the given genotypes - command: /z_ggametes or by pressing the button above the keyboard: GETTING GAMETES 🧬', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GETTING GAMETES 🧬']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
+        // }
+        // await ctx.tg.sendMessage(1334751749, 'New update ⬆️\n\n- Combinator for obtaining valid gametes from the given genotypes - command: /z_ggametes or by pressing the button above the keyboard: GETTING GAMETES 🧬', {reply_markup: {keyboard: [['STATS 📊'], ['PAYMENTS 💳'], ['GETTING GAMETES 🧬']], resize_keyboard: true}, parse_mode: 'HTML', disable_web_page_preview: true})
     } catch (e) {
         console.error(e);
     }
@@ -1199,8 +1204,7 @@ bot.on('message', async ctx => {
     }
 })
 
-
-bot.launch({dropPendingUpdates: true});
+bot.startWebhook('/', null, 3000);
 
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));

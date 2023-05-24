@@ -2,9 +2,9 @@ const { Scenes, session, Telegraf, Markup } = require('telegraf');
 const { collection, ObjectId } = require('./additions/db');
 require('dotenv').config();
 const bot = new Telegraf(process.env.BOT_TOKEN);
+bot.telegram.setWebhook('https://zade-production.up.railway.app', {max_connections: 50});
 const { DateTime } = require('luxon');
 const { enter, leave } = Scenes.Stage;
-
 
 const nameget = new Scenes.BaseScene("nameget");
 
@@ -645,8 +645,6 @@ bfg.on('text', async ctx => {
 const stage = new Scenes.Stage([nameget, news, groupanalyse, gfgp, gsgp, gfedp, gsedp, bookord, coursepay, namefpay, pointofp, bfg]);  
 bot.use(session());
 bot.use(stage.middleware());  
-
-bot.telegram.setWebhook(process.env.DOMEN, {max_connections: 50});
 
 bot.start(async (ctx) => {
     try {

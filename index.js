@@ -1230,8 +1230,7 @@ bot.on('message', async ctx => {
     }
 })
 
-bot.launch()
-// bot.startWebhook('/', null, 3000);
+bot.startWebhook('/', null, 3000);
 
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
